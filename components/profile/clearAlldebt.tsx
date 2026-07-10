@@ -20,8 +20,13 @@ const initialState = {
   message: "",
 };
 
-export function ClearDebtForm({ user }) {
-  const [paymentMethod, setPaymentMethod] = useState("");
+interface User {
+  id: string;
+  totalDebits: number;
+}
+
+export function ClearDebtForm({ user }: { user: User }) {
+  const [paymentMethod, setPaymentMethod] = useState<string | null>("");
   const [state, formAction, pending] = useActionState(
     clearAllDebts,
     initialState,
