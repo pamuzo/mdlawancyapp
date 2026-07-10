@@ -58,9 +58,15 @@ export default function NewBookingPage() {
 
   const [deliveryDate, setDeliveryDate] = useState("");
 
-  const totalPrice = useMemo(() => quantity * cost, [quantity, cost]);
+  const totalPrice = useMemo(
+    () => quantity * (parseFloat(cost) || 0),
+    [quantity, cost],
+  );
 
-  const balance = useMemo(() => totalPrice - deposit, [totalPrice, deposit]);
+  const balance = useMemo(
+    () => totalPrice - (parseFloat(deposit) || 0),
+    [totalPrice, deposit],
+  );
   const overpaid = balance < 0;
 
   useEffect(() => {
@@ -319,7 +325,7 @@ export default function NewBookingPage() {
           </form>
         </CardContent>
         <CardFooter>
-          {data.message && (
+          {/* {data.message && (
             <div
               className={`rounded-md p-3 text-sm  ${
                 data.success
@@ -329,7 +335,7 @@ export default function NewBookingPage() {
             >
               {data.message}
             </div>
-          )}
+          )} */}
         </CardFooter>
       </Card>
     </div>
