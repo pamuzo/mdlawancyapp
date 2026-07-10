@@ -149,11 +149,7 @@ export function AppSidebar({ session }: { session: any }) {
 
                 return (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={isActive}
-                      tooltip={item.title}
-                    >
+                    <SidebarMenuButton isActive={isActive} tooltip={item.title}>
                       <Link href={item.url} className="flex items-center gap-2">
                         <item.icon />
                         <span>{item.title}</span>
@@ -177,7 +173,7 @@ export function AppSidebar({ session }: { session: any }) {
                   className="group/collapsible"
                 >
                   <SidebarMenuItem>
-                    <CollapsibleTrigger asChild>
+                    <CollapsibleTrigger>
                       <SidebarMenuButton tooltip={item.title}>
                         <item.icon />
 
@@ -194,10 +190,7 @@ export function AppSidebar({ session }: { session: any }) {
 
                           return (
                             <SidebarMenuSubItem key={subItem.title}>
-                              <SidebarMenuSubButton
-                                asChild
-                                isActive={isActive}
-                              >
+                              <SidebarMenuSubButton isActive={isActive}>
                                 <Link
                                   href={subItem.url}
                                   className="flex items-center gap-2"
