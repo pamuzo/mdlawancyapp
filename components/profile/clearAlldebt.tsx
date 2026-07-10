@@ -26,7 +26,7 @@ interface User {
 }
 
 export function ClearDebtForm({ user }: { user: User }) {
-  const [paymentMethod, setPaymentMethod] = useState<string | null>("");
+  const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
   const [state, formAction, pending] = useActionState(
     clearAllDebts,
     initialState,
