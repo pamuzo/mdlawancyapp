@@ -194,7 +194,10 @@ export function AppSidebar({ session }: { session: any }) {
 
                           return (
                             <SidebarMenuSubItem key={subItem.title}>
-                              <SidebarMenuSubButton asChild isActive={isActive}>
+                              <SidebarMenuSubButton
+                                asChild
+                                isActive={isActive}
+                              >
                                 <Link
                                   href={subItem.url}
                                   className="flex items-center gap-2"

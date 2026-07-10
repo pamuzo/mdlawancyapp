@@ -16,11 +16,11 @@ export default async function CustomerPage({
     .filter((booking) => booking.userId === id)
     .map((booking) => ({
       ...booking,
-      cost: booking.cost.toNumber(),
-      deposit: booking.deposit.toNumber(),
-      balance: booking.balance.toNumber(),
-      overpaid: booking.overpaid.toNumber(),
-      totalPrice: booking.totalPrice.toNumber(),
+      cost: booking.cost,
+      deposit: booking.deposit,
+      balance: booking.balance,
+      overpaid: booking.overpaid,
+      totalPrice: booking.totalPrice,
       createdAt: booking.createdAt.toString(),
       deliveryDate: booking.deliveryDate?.toString(),
     }));
