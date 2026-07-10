@@ -16,15 +16,33 @@ export default async function Bookings() {
   }
 
   const bookings = await getBooking();
+  const normalizedBookings = bookings.map((booking) => ({
+    ...booking,
+    cost: Number(booking.cost),
+    deposit: Number(booking.deposit),
+    balance: Number(booking.balance),
+    overpaid: Number(booking.overpaid),
+    totalPrice: Number(booking.totalPrice),
+    createdAt:
+      booking.createdAt instanceof Date
+        ? booking.createdAt.toISOString()
+        : booking.createdAt,
+    deliveryDate:
+      booking.deliveryDate instanceof Date
+        ? booking.deliveryDate.toISOString()
+        : booking.deliveryDate,
+  }));
 
-  const pendingBookings = bookings.filter((b) => b.status === "PENDING").length;
+  const pendingBookings = normalizedBookings.filter(
+    (b) => b.status === "PENDING",
+  ).length;
 
-  const completedBookings = bookings.filter(
+  const completedBookings = normalizedBookings.filter(
     (b) => b.status === "COMPLETED",
   ).length;
 
-  const totalRevenue = bookings.reduce(
-    (sum, booking) => sum + Number(booking.totalPrice),
+  const totalRevenue = normalizedBookings.reduce(
+    (sum, booking) => sum + booking.totalPrice,
     0,
   );
 
@@ -74,7 +92,7 @@ export default async function Bookings() {
           </CardContent>
         </Card>
       </div>
-      <SearchBooking bookings={bookings} />
+      <SearchBooking bookings={normalizedBookings} />
     </div>
   );
 }
