@@ -111,7 +111,10 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
             className="md:max-w-sm"
           />
 
-          <Select value={status} onValueChange={setStatus}>
+          <Select
+            value={status}
+            onValueChange={(value) => setStatus(value ?? "ALL")}
+          >
             <SelectTrigger className="md:w-[200px]">
               <SelectValue />
             </SelectTrigger>
