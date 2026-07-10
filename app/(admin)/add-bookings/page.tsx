@@ -51,17 +51,23 @@ export default function NewBookingPage() {
   const [jobDetails, setJobDetails] = useState("");
 
   const [quantity, setQuantity] = useState(1);
-  const [cost, setCost] = useState<number>(0);
-  const [deposit, setDeposit] = useState<number>(0);
+  const [cost, setCost] = useState("");
+  const [deposit, setDeposit] = useState("");
 
   const [paymentMethod, setPaymentMethod] = useState("");
 
   const [deliveryDate, setDeliveryDate] = useState("");
   // cost:number
 
-  const totalPrice = useMemo(() => quantity * cost, [quantity, cost]);
+  const totalPrice = useMemo(
+    () => quantity * parseFloat(cost),
+    [quantity, cost],
+  );
 
-  const balance = useMemo(() => totalPrice - deposit, [totalPrice, deposit]);
+  const balance = useMemo(
+    () => totalPrice - parseFloat(deposit),
+    [totalPrice, deposit],
+  );
   const overpaid = balance < 0;
 
   useEffect(() => {
@@ -77,8 +83,8 @@ export default function NewBookingPage() {
       setJobType("");
       setJobDetails("");
       setQuantity(1);
-      setCost(0);
-      setDeposit(0);
+      setCost("");
+      setDeposit("");
       setPaymentMethod("");
       setDeliveryDate("");
       // redirect("/");
