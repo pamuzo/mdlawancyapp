@@ -94,8 +94,8 @@ export async function RecentActivities({ user }: Props) {
         </TableHeader>
         <TableBody>
           {userbooking.map((booking, key) => {
-            const stockLevel =
-              booking.balance === 0 ? 2 : booking.balance > 1 ? 0 : 2;
+            const balance = Number(booking.balance);
+            const stockLevel = balance === 0 ? 2 : balance > 1 ? 0 : 2;
             const bgColor = ["bg-red-600", "bg-yellow-600", "bg-green-600"];
             const textColor = [
               "text-red-600",
