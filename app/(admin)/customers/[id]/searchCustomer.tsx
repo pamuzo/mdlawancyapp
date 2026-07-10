@@ -193,7 +193,10 @@ export default function SearchCustomer({
             className="md:max-w-sm"
           />
 
-          <Select value={filter} onValueChange={setFilter}>
+          <Select
+            value={filter}
+            onValueChange={(value: string | null) => setFilter(value ?? "ALL")}
+          >
             <SelectTrigger className="md:w-[200px]">
               <SelectValue />
             </SelectTrigger>
@@ -446,7 +449,7 @@ export default function SearchCustomer({
 
                   <Select
                     value={paymentMethod}
-                    onValueChange={setPaymentMethod}
+                    onValueChange={(val) => setPaymentMethod(val ?? "")}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select payment method" />
@@ -478,7 +481,7 @@ export default function SearchCustomer({
                   <Button type="submit" disabled={pending || isInvalidAmount}>
                     {pending ? "Saving..." : "Save changes"}
                   </Button>
-                  <SheetClose asChild>
+                  <SheetClose>
                     <Button variant="outline">Close</Button>
                   </SheetClose>
                 </SheetFooter>
