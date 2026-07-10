@@ -15,6 +15,14 @@ export default async function ProfilePage() {
   }
 
   const user = session.user;
+  // Ensure numeric monetary fields are passed as strings to match ProfileStats prop types
+  const statsUser = {
+    ...user,
+    cashBack: String((user as any).cashBack ?? "0"),
+    totalCredit: String((user as any).totalCredit ?? "0"),
+    totalDebits: String((user as any).totalDebits ?? "0"),
+    totalSpent: String((user as any).totalSpent ?? "0"),
+  };
 
   return (
     <main className="min-h-screen bg-slate-50 dark:bg-slate-950">
@@ -22,7 +30,7 @@ export default async function ProfilePage() {
         <ProfileHeader user={user} />
 
         <div className="mt-8">
-          <ProfileStats user={user} />
+          <ProfileStats user={statsUser} />
         </div>
 
         <div className="mt-8 grid gap-6 lg:grid-cols-2">
