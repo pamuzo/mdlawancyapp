@@ -10,7 +10,7 @@ const ProductDetailsPage = async (props: {
   params: Promise<{ slug: string }>;
 }) => {
   const { slug } = await props.params;
-  const product = (await getProductBySlug(slug)) as any;
+  const product = await getProductBySlug(slug);
   if (!product) notFound();
 
   const specifications = [
@@ -54,7 +54,7 @@ const ProductDetailsPage = async (props: {
                     <Star
                       key={index}
                       className={`h-4 w-4 ${
-                        index < Math.round(product.rating)
+                        index < Math.round(Number(product.rating))
                           ? "fill-yellow-400 text-yellow-400"
                           : "text-gray-300"
                       }`}
