@@ -55,7 +55,7 @@ export async function ProfileStats({ user }: Props) {
         <p className="text-sm text-slate-500">Total in Debit</p>
         <div className="flex justify-between align-baseline">
           <h3 className="mt-2 text-3xl font-bold text-red-500">
-            ₦{user.totalDebits.toLocaleString()}
+            ₦{Number(user.totalDebits).toLocaleString()}
           </h3>
           <Dialog>
             <DialogTrigger
@@ -64,7 +64,9 @@ export async function ProfileStats({ user }: Props) {
               Clear Debt
             </DialogTrigger>
             <DialogContent>
-              <ClearDebtForm user={user} />
+              <ClearDebtForm
+                user={{ ...user, totalDebits: Number(user.totalDebits) }}
+              />
             </DialogContent>
           </Dialog>
         </div>
