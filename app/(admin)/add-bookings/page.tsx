@@ -51,22 +51,16 @@ export default function NewBookingPage() {
   const [jobDetails, setJobDetails] = useState("");
 
   const [quantity, setQuantity] = useState(1);
-  const [cost, setCost] = useState("");
-  const [deposit, setDeposit] = useState("");
+  const [cost, setCost] = useState(0);
+  const [deposit, setDeposit] = useState(0);
 
   const [paymentMethod, setPaymentMethod] = useState("");
 
   const [deliveryDate, setDeliveryDate] = useState("");
 
-  const totalPrice = useMemo(
-    () => quantity * (parseFloat(cost) || 0),
-    [quantity, cost],
-  );
+  const totalPrice = useMemo(() => quantity * cost, [quantity, cost]);
 
-  const balance = useMemo(
-    () => totalPrice - (parseFloat(deposit) || 0),
-    [totalPrice, deposit],
-  );
+  const balance = useMemo(() => totalPrice - deposit, [totalPrice, deposit]);
   const overpaid = balance < 0;
 
   useEffect(() => {
@@ -82,8 +76,8 @@ export default function NewBookingPage() {
       setJobType("");
       setJobDetails("");
       setQuantity(1);
-      setCost("");
-      setDeposit("");
+      setCost(0);
+      setDeposit(0);
       setPaymentMethod("");
       setDeliveryDate("");
       // redirect("/");
@@ -325,7 +319,7 @@ export default function NewBookingPage() {
           </form>
         </CardContent>
         <CardFooter>
-          {/* {data.message && (
+          {data.message && (
             <div
               className={`rounded-md p-3 text-sm  ${
                 data.success
@@ -335,7 +329,7 @@ export default function NewBookingPage() {
             >
               {data.message}
             </div>
-          )} */}
+          )}
         </CardFooter>
       </Card>
     </div>
