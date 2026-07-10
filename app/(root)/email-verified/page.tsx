@@ -1,5 +1,3 @@
-
-
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/db/prisma";
 import { getSession } from "@/lib/get-session";
@@ -35,7 +33,7 @@ export default async function EmailVerifiedPage() {
             Your email has been verified successfully.
           </p>
         </div>
-        <Button asChild>
+        <Button>
           <Link href="/profile">Go to profile</Link>
         </Button>
       </div>

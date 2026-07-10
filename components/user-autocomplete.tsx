@@ -67,7 +67,7 @@ export function UserAutocomplete({ value, onSelect }: UserAutocompleteProps) {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
+      <PopoverTrigger>
         <Button
           variant="outline"
           role="combobox"

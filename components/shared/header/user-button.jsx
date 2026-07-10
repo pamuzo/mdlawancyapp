@@ -17,7 +17,7 @@ function Usermenu({ session, signOutUser }) {
   return (
     <div className="flex gap-2 items-center">
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
+        <DropdownMenuTrigger>
           <Button
             variant="ghost"
             className="relative w-8 h-8 rounded-full ml-2 flex items-center justify-center  bg-gray-200  hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00425A] text-[#00425A] text-lg font-semibold"
