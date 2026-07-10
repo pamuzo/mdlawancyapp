@@ -60,11 +60,11 @@ CREATE TABLE "ProductTag" (
 
 -- CreateTable
 CREATE TABLE "User" (
-    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "id" TEXT NOT NULL,
     "name" TEXT NOT NULL DEFAULT 'NO NAME',
     "email" TEXT NOT NULL,
     "userName" TEXT,
-    "emailVerified" TIMESTAMP(6),
+    "emailVerified" BOOLEAN DEFAULT false,
     "image" TEXT,
     "password" TEXT,
     "role" TEXT NOT NULL DEFAULT 'USER',
@@ -78,47 +78,53 @@ CREATE TABLE "User" (
 
 -- CreateTable
 CREATE TABLE "Account" (
-    "userId" UUID NOT NULL,
-    "type" TEXT NOT NULL,
-    "provider" TEXT NOT NULL,
-    "providerAccountId" TEXT NOT NULL,
-    "refresh_token" TEXT,
-    "access_token" TEXT,
-    "expires_at" INTEGER,
-    "token_type" TEXT,
+    "id" TEXT NOT NULL,
+    "accountId" TEXT NOT NULL,
+    "providerId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "accessToken" TEXT,
+    "refreshToken" TEXT,
+    "accessTokenExpiresAt" TIMESTAMP(3),
+    "refreshTokenExpiresAt" TIMESTAMP(3),
     "scope" TEXT,
-    "id_token" TEXT,
-    "session_state" TEXT,
-    "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(6) NOT NULL,
+    "idToken" TEXT,
+    "password" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Account_pkey" PRIMARY KEY ("provider","providerAccountId")
+    CONSTRAINT "Account_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Session" (
-    "sessionToken" TEXT NOT NULL,
-    "userId" UUID NOT NULL,
-    "expires" TIMESTAMP(6) NOT NULL,
-    "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(6) NOT NULL,
+    "id" TEXT NOT NULL,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+    "token" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "ipAddress" TEXT,
+    "userAgent" TEXT,
+    "userId" TEXT NOT NULL,
 
-    CONSTRAINT "Session_pkey" PRIMARY KEY ("sessionToken")
+    CONSTRAINT "Session_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "VerificationToken" (
+    "id" TEXT NOT NULL,
     "identifier" TEXT NOT NULL,
-    "token" TEXT NOT NULL,
-    "expires" TIMESTAMP(3) NOT NULL,
+    "value" TEXT NOT NULL,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3),
+    "updatedAt" TIMESTAMP(3),
 
-    CONSTRAINT "VerificationToken_pkey" PRIMARY KEY ("identifier","token")
+    CONSTRAINT "VerificationToken_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Cart" (
     "id" UUID NOT NULL DEFAULT gen_random_uuid(),
-    "userId" UUID,
+    "userId" TEXT,
     "sessionCartId" TEXT NOT NULL,
     "items" JSON[] DEFAULT ARRAY[]::JSON[],
     "itemssPrice" DECIMAL(12,2) NOT NULL,
@@ -138,6 +144,12 @@ CREATE UNIQUE INDEX "user_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "user_user_name_key" ON "User"("userName");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Session_token_key" ON "Session"("token");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "VerificationToken_identifier_value_key" ON "VerificationToken"("identifier", "value");
 
 -- AddForeignKey
 ALTER TABLE "ProductImage" ADD CONSTRAINT "ProductImage_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;

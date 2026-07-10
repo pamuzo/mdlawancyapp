@@ -1,9 +1,12 @@
 import HeaderMenu from "./headerMenu";
+import { auth } from "@/lib/auth";
 
-const Header = () => {
+type Session = typeof auth.$Infer.Session;
+
+const Header = ({ session }: { session: Session | null }) => {
   return (
     <>
-      <HeaderMenu />
+      <HeaderMenu session={session} />
     </>
   );
 };

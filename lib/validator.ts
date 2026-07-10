@@ -31,3 +31,45 @@ export const insertProductSchema = z.object({
   banner: z.string().nullable(),
   price: currency,
 });
+
+// To validate password strength
+export const passwordSchema = z
+  .string()
+  .min(1, { message: "Password is required" })
+  .min(8, { message: "Password must be at least 8 characters" })
+  .regex(/[^A-Za-z0-9]/, {
+    message: "Password must contain at least one special character",
+  });
+
+// Schema for user sign up
+export const signUpSchema = z.object({
+  name: z.string().min(3, "Name must be at least 3 characters long"),
+  email: z.email({ message: "Invalid email address" }),
+  password: passwordSchema,
+});
+
+// validate booking
+export const newBookingSchema = z.object({
+  userId: z.string(),
+  jobType: z.string({ message: "Include a job type" }),
+  jobDetails: z.string().min(3, "Include a short discription about the job"),
+  deliveryDate: z.date({ message: "Select a delivery Date" }),
+});
+
+// VALIDATE THE PROFILE
+export const profileSchema = z.object({
+  name: z.string().min(2).max(100),
+  userName: z.string().min(3).max(30).optional().or(z.literal("")),
+  email: z.string().email(),
+  phoneNumber: z.string().optional().or(z.literal("")),
+  otherNumber: z.string().optional().or(z.literal("")),
+  gender: z.string().optional().or(z.literal("")),
+  bio: z.string().max(500).optional().or(z.literal("")),
+  businessName: z.string().optional().or(z.literal("")),
+  businessAddress: z.string().optional().or(z.literal("")),
+  image: z.string().optional().or(z.literal("")),
+  paymentMethods: z.string().optional().or(z.literal("")),
+  dateOfBirth: z.string().optional(),
+});
+
+export type ProfileFormValues = z.infer<typeof profileSchema>;

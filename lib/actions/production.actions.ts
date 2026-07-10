@@ -2,12 +2,11 @@
 
 import { prisma } from "@/db/prisma";
 import { covertToPlainObject } from "@/lib/utils";
-import { LATEST_PRODUCTS_LIMIT } from "../constants";
-// get alatest products
 
+// get alatest products
 export async function getLatestProducts() {
   const data = await prisma.product.findMany({
-    take: LATEST_PRODUCTS_LIMIT,
+    // take: LATEST_PRODUCTS_LIMIT,
     orderBy: {
       createdAt: "asc",
     },
@@ -17,10 +16,7 @@ export async function getLatestProducts() {
       tags: true,
     },
   });
-  return (
-    // console.log(data),
-    covertToPlainObject(data)
-  );
+  return covertToPlainObject(data);
 }
 
 // get Sigle Product by Slug

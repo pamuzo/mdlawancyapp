@@ -10,8 +10,6 @@ const Homepage = async () => {
     <div>
       <Hero />
       <ProductList data={latestProducts} title="Featured Products" limit={4} />
-      <p>This is the main page of our application.</p>
-      <Button>Get Started</Button>
     </div>
   );
 };

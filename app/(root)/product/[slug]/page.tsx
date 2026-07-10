@@ -3,10 +3,8 @@ import { getProductBySlug } from "@/lib/actions/production.actions";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-// import { Product } from "@/types";
 import ProductImages from "@/components/shared/product/product-images";
 import { CheckCircle2, Star } from "lucide-react";
-// import AddToCart from "@/components/shared/product/add-to-cart";
 
 const ProductDetailsPage = async (props: {
   params: Promise<{ slug: string }>;
@@ -32,7 +30,7 @@ const ProductDetailsPage = async (props: {
         <div className="grid grid-col-1 md:grid-cols-5">
           {/* Image colum */}
           <div className="md:col-span-2">
-            <ProductImages images={product.images} />
+            <ProductImages images={product.images.map((img) => img.url)} />
           </div>
 
           {/* Product details column */}

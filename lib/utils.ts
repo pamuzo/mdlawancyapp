@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+// import { headers } from "next/headers";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -15,4 +16,15 @@ export function covertToPlainObject<T>(value: T): T {
 export function formatToDecimalPlaces(num: number | string): string {
   const [int, decimal] = num.toString().split(".");
   return decimal ? `${int}.${decimal.padEnd(2, "0")}` : `${int}.00`;
+}
+
+// to convert empty strings to undefined
+
+export function formDataToObject(formData: FormData) {
+  return Object.fromEntries(
+    [...formData.entries()].map(([key, value]) => [
+      key,
+      value === "" ? undefined : value,
+    ]),
+  );
 }
