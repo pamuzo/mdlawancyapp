@@ -12,7 +12,6 @@ import {
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -66,7 +65,7 @@ export default async function Products() {
 
                   <TableCell className="text-right">
                     <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
+                      <DropdownMenuTrigger>
                         <Button variant="ghost" size="icon" className="size-8">
                           <MoreHorizontalIcon />
                           <span className="sr-only">Open menu</span>
