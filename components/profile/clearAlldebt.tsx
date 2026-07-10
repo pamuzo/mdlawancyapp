@@ -26,7 +26,7 @@ interface User {
 }
 
 export function ClearDebtForm({ user }: { user: User }) {
-  const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [state, formAction, pending] = useActionState(
     clearAllDebts,
     initialState,
@@ -60,7 +60,10 @@ export function ClearDebtForm({ user }: { user: User }) {
       <Input name="amount" value={user.totalDebits} readOnly />
 
       <Label htmlFor="paymentMethod">Payment Method</Label>
-      <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+      <Select
+        value={paymentMethod}
+        onValueChange={(val) => setPaymentMethod(val ?? "")}
+      >
         <SelectTrigger>
           <SelectValue placeholder="Select payment method" />
         </SelectTrigger>
