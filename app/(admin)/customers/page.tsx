@@ -62,7 +62,7 @@ export default async function CustomersPage() {
                   </TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
+                      <DropdownMenuTrigger>
                         <Button variant="ghost" size="icon" className="size-8">
                           <MoreHorizontalIcon />
                           <span className="sr-only">Open menu</span>
