@@ -32,6 +32,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
+  PaginationEllipsis,
 } from "@/components/ui/pagination";
 
 type Booking = {
@@ -97,8 +98,10 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
   };
 
   useEffect(() => {
-    setCurrentPage(1);
-  }, [search, status]);
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(1);
+    }
+  }, [totalPages, currentPage]);
 
   return (
     <div className="space-y-6 ">
