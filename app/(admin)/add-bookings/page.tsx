@@ -24,8 +24,16 @@ import { UserAutocomplete } from "@/components/user-autocomplete";
 import { useFormStatus } from "react-dom";
 import { toast } from "sonner";
 
+interface Customer {
+  id: string;
+  phoneNumber?: string | null;
+  name?: string | null;
+  email?: string | null;
+  businessName?: string | null;
+}
+
 interface SubmitButtonProps {
-  customer: unknown;
+  customer: Customer | null;
 }
 
 function SubmitButton({ customer }: SubmitButtonProps) {
@@ -44,7 +52,7 @@ export default function NewBookingPage() {
     message: "",
   });
   const formRef = useRef<HTMLFormElement>(null);
-  const [customer, setCustomer] = useState<any>(null);
+  const [customer, setCustomer] = useState<Customer | null>(null);
 
   // const [userId, setJobType] = useState("");
   const [jobType, setJobType] = useState("");
@@ -59,11 +67,13 @@ export default function NewBookingPage() {
   const [deliveryDate, setDeliveryDate] = useState("");
   // cost:number
 
+  const depositAmount = useMemo(() => parseFloat(deposit) || 0, [deposit]);
+
   const totalPrice = useMemo(() => quantity * Number(cost), [quantity, cost]);
 
   const balance = useMemo(
-    () => totalPrice - parseFloat(deposit),
-    [totalPrice, deposit],
+    () => totalPrice - depositAmount,
+    [totalPrice, depositAmount],
   );
   const overpaid = balance < 0;
 
@@ -71,20 +81,22 @@ export default function NewBookingPage() {
     if (data?.success) {
       toast.success("Booked  successfully!", {
         duration: 5000,
-        // description: "Monday, January 3rd at 6:00pm",
       });
 
-      formRef.current?.reset();
+      const timeoutId = window.setTimeout(() => {
+        formRef.current?.reset();
 
-      setCustomer(null);
-      setJobType("");
-      setJobDetails("");
-      setQuantity(1);
-      setCost("");
-      setDeposit("");
-      setPaymentMethod("");
-      setDeliveryDate("");
-      // redirect("/");
+        setCustomer(null);
+        setJobType("");
+        setJobDetails("");
+        setQuantity(1);
+        setCost("");
+        setDeposit("");
+        setPaymentMethod("");
+        setDeliveryDate("");
+      }, 0);
+
+      return () => window.clearTimeout(timeoutId);
     }
 
     if (data?.success === false && data?.message) {
@@ -148,7 +160,10 @@ export default function NewBookingPage() {
               <div>
                 <Label>Job Type</Label>
 
-                <Select value={jobType} onValueChange={setJobType}>
+                <Select
+                  value={jobType}
+                  onValueChange={(value) => setJobType(value ?? "")}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select the job type" />
                   </SelectTrigger>
@@ -183,7 +198,10 @@ export default function NewBookingPage() {
               <div>
                 <Label>Payment Method</Label>
 
-                <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+                <Select
+                  value={paymentMethod}
+                  onValueChange={(value) => setPaymentMethod(value ?? "")}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select payment method" />
                   </SelectTrigger>
@@ -243,7 +261,7 @@ export default function NewBookingPage() {
                   name="cost"
                   type="number"
                   value={cost}
-                  onChange={(e) => setCost(Number(e.target.value))}
+                  onChange={(e) => setCost(e.target.value)}
                   placeholder="Cost"
                   required
                 />
@@ -256,7 +274,7 @@ export default function NewBookingPage() {
                   name="deposit"
                   type="number"
                   value={deposit}
-                  onChange={(e) => setDeposit(Number(e.target.value))}
+                  onChange={(e) => setDeposit(e.target.value)}
                   placeholder="Deposit"
                   required
                 />
@@ -307,7 +325,10 @@ export default function NewBookingPage() {
                   <p className="text-sm text-muted-foreground">Overpaid</p>
 
                   <p className="text-2xl font-bold text-green-500">
-                    ₦{overpaid ? (deposit - totalPrice).toLocaleString() : 0}
+                    ₦
+                    {overpaid
+                      ? (depositAmount - totalPrice).toLocaleString()
+                      : 0}
                   </p>
                 </div>
               </CardContent>
