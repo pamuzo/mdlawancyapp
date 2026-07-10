@@ -51,12 +51,13 @@ export default function NewBookingPage() {
   const [jobDetails, setJobDetails] = useState("");
 
   const [quantity, setQuantity] = useState(1);
-  const [cost, setCost] = useState(0);
-  const [deposit, setDeposit] = useState(0);
+  const [cost, setCost] = useState<number>(0);
+  const [deposit, setDeposit] = useState<number>(0);
 
   const [paymentMethod, setPaymentMethod] = useState("");
 
   const [deliveryDate, setDeliveryDate] = useState("");
+  // cost:number
 
   const totalPrice = useMemo(() => quantity * cost, [quantity, cost]);
 
@@ -319,7 +320,7 @@ export default function NewBookingPage() {
           </form>
         </CardContent>
         <CardFooter>
-          {data.message && (
+          {/* {data.message && (
             <div
               className={`rounded-md p-3 text-sm  ${
                 data.success
@@ -329,7 +330,7 @@ export default function NewBookingPage() {
             >
               {data.message}
             </div>
-          )}
+          )} */}
         </CardFooter>
       </Card>
     </div>
