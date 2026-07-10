@@ -59,10 +59,7 @@ export default function NewBookingPage() {
   const [deliveryDate, setDeliveryDate] = useState("");
   // cost:number
 
-  const totalPrice = useMemo(
-    () => quantity * parseFloat(cost),
-    [quantity, cost],
-  );
+  const totalPrice = useMemo(() => quantity * Number(cost), [quantity, cost]);
 
   const balance = useMemo(
     () => totalPrice - parseFloat(deposit),
