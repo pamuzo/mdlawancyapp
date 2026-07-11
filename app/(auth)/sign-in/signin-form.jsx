@@ -10,6 +10,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 
 import { Button } from "@/components/ui/button";
+import { PasswordInput } from "@/components/password-input";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
@@ -19,6 +20,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
 
 import { APP_NAME } from "@/lib/constants";
 
@@ -29,7 +31,15 @@ function SignInButton() {
 
   return (
     <Button className="w-full" type="submit" disabled={pending}>
-      {pending ? "Signing in..." : "Sign in"}
+      
+      {pending ? (
+        <>
+          <Spinner data-icon="inline-start" />
+          Signing in...
+        </>
+      ) : (
+        "Sign in"
+      )}
     </Button>
   );
 }
@@ -112,13 +122,11 @@ export default function SigninForm() {
                   >
                     Password
                   </Label>
-                  <Input
+                  <PasswordInput
                     id="password"
                     name="password"
-                    type="password"
                     autoComplete="password"
                     required
-                    //   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
                 </div>
                 <div className="flex justify-between text-sm">

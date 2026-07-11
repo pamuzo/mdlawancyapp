@@ -13,6 +13,7 @@ type Props = {
     totalCredit: string;
     totalDebits: string;
     totalSpent: string;
+    totalJobs: string;
     role: string;
     phoneNumber: string;
   };
@@ -22,6 +23,15 @@ export async function ProfileStats({ user }: Props) {
   const getTotalSpent = allUser.map((totalspent) =>
     Number(totalspent.totalSpent),
   );
+
+  const getTotalQuantity = allUser.map((totalquantity) =>
+    Number(totalquantity.totalJobs),
+  );
+  const totalQuantityOfAllUser = getTotalQuantity.reduce(
+    (accumulator, current) => accumulator + current,
+    0,
+  );
+
   const totalSpentOfAllUser = getTotalSpent.reduce(
     (accumulator, current) => accumulator + current,
     0,
@@ -31,7 +41,9 @@ export async function ProfileStats({ user }: Props) {
   const adminUser = session?.user;
 
   const reputation =
-    (Number(user.totalSpent) / totalSpentOfAllUser) * 0.7 * 100;
+    ((Number(user?.totalSpent) / totalSpentOfAllUser) * 0.7 +
+      (Number(user?.totalJobs) / totalQuantityOfAllUser) * 0.3) *
+    100;
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

@@ -22,6 +22,7 @@ export default async function ProfilePage() {
     totalCredit: String((user as any).totalCredit ?? "0"),
     totalDebits: String((user as any).totalDebits ?? "0"),
     totalSpent: String((user as any).totalSpent ?? "0"),
+    totalJobs: String((user as any).totalJobs ?? "0"),
   };
 
   return (

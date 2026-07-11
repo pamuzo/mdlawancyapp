@@ -35,9 +35,7 @@ export function AccountCard({ user }: Props) {
           <label className="text-sm text-slate-500">Phone Number</label>
 
           <div className="mt-2 break-all rounded-xl border p-3">
-            <div className="mt-2 break-all rounded-xl border p-3">
-              {user.phoneNumber}
-            </div>
+            {user.phoneNumber}
           </div>
         </div>
       </div>

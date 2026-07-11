@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { GoogleIcon } from "@/components/googleIcon";
 import { PasswordInput } from "@/components/password-input";
+import { Spinner } from "@/components/ui/spinner";
 
 import { toast } from "sonner";
 import {
@@ -32,7 +33,14 @@ function SignUpButton() {
 
   return (
     <Button className="w-full" type="submit" disabled={pending}>
-      {pending ? "Submitting..." : "Sign up"}
+      {pending ? (
+        <>
+          <Spinner data-icon="inline-start" />
+          Submitting...
+        </>
+      ) : (
+        "Sign up"
+      )}
     </Button>
   );
 }
@@ -149,7 +157,6 @@ export default function SignUpForm() {
                     name="password"
                     autoComplete="password"
                     required
-                    //   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
                 </div>
                 <div>
@@ -193,7 +200,7 @@ export default function SignUpForm() {
                   </div>
                 )}
 
-                <Button
+                {/* <Button
                   type="button"
                   variant="outline"
                   className="w-full gap-2"
@@ -204,7 +211,7 @@ export default function SignUpForm() {
                 >
                   <GoogleIcon className="mr-2" />
                   Sign up with Google
-                </Button>
+                </Button> */}
 
                 <div className="text-sm text-center text-muted-foreground">
                   Already have an account?{" "}

@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { BsCart4 } from "react-icons/bs";
 import Usermenu from "./user-button";
 import {
   FaFacebookSquare,
@@ -12,12 +11,13 @@ import {
   FaTwitter,
   FaYoutube,
 } from "react-icons/fa";
-import { FiUser } from "react-icons/fi";
 import { IoClose, IoSearchOutline } from "react-icons/io5";
 import ModeToggle from "./mode-toggle";
 import { auth } from "@/lib/auth";
 
 import { signOutUser } from "@/lib/actions/user.action";
+import { UserIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const NAV_ITEMS = [
   //   { name: "MDLawancy", href: "/" },
@@ -48,13 +48,7 @@ function HeaderMenu({
         <div className="max-w-7xl mx-auto pt-3  sm:px-6 lg:px-8 flex items-center ">
           <div className="flex shrink-0 px-2 lg:w-[15%] ">
             <Link href="/">
-              <img
-                src="images/logo.svg"
-                alt="Logo"
-                // width={64}
-                // height={64}
-                className="w-16 h-auto"
-              />
+              <Image src="/images/logo.svg" alt="Logo" width={64} height={64} />
             </Link>
           </div>
 
@@ -82,30 +76,23 @@ function HeaderMenu({
               {/* Social Icons */}
               <div className="flex items-center justify-end w-full md:w-auto  pr-5 gap-3 ">
                 <ModeToggle />
-                <Link href="#" className="hidden sm:flex  text-xl">
+                {/* <Link href="#" className="hidden sm:flex  text-xl">
                   Shop
                 </Link>
-                <BsCart4 className=" text-2xl" />
+                <BsCart4 className=" text-2xl" /> */}
 
-                {/* {session && (
-                <Link href="/sign-in">
-                  <FiUser className="text-[#00425A] text-2xl" />
-                </Link>
-              )} */}
-
-                {/* <Button asChild variant={"ghost"}>
-                <Link href="sign-in">
-                  <UserIcon />
-                  Sign In
-                </Link>
-              </Button> */}
                 {!session ? (
                   <Link href="/sign-in">
-                    <FiUser className=" text-2xl" />
+                    <Button
+                      variant={"ghost"}
+                      className="flex  items-center gap-2"
+                    >
+                      <UserIcon className="text-xl" />
+                      Sign In
+                    </Button>
                   </Link>
                 ) : (
                   <Usermenu session={session} signOutUser={signOutUser} />
-                  // <p> Signout</p>
                 )}
 
                 {/* <Link

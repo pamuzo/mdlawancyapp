@@ -32,6 +32,7 @@ export const getSession = cache(async () => {
       totalDebits: user?.totalDebits.toNumber() ?? 0,
       totalCredit: user?.totalCredit.toNumber() ?? 0,
       totalSpent: user?.totalSpent.toNumber() ?? 0,
+      totalJobs: user?.totalJobs ?? 0,
     },
   };
 });
