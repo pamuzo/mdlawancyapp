@@ -463,7 +463,8 @@ export default function ScreenPrintingPage() {
               Still wondering? Our helpful humans are just an email away.
             </p>
           </div>
-          <Accordion type="single" collapsible className="w-full">
+          {/* Use explicit props without an any cast */}
+          <Accordion className="w-full">
             {faqs.map(([question, answer], i) => (
               <AccordionItem
                 key={question}
