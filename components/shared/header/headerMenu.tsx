@@ -18,15 +18,17 @@ import { auth } from "@/lib/auth";
 import { signOutUser } from "@/lib/actions/user.action";
 import { UserIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ButtonGroup } from "@/components/ui/button-group";
 
 const NAV_ITEMS = [
   //   { name: "MDLawancy", href: "/" },
-  { name: "Embroidery", href: "/about" },
-  { name: "Heat transfer", href: "/services" },
-  { name: "Screen Printing", href: "/contact" },
-  { name: "Engraving", href: "/contact" },
-  { name: "Learn ", href: "/contact" },
-  { name: "Support", href: "/contact" },
+  { name: "Embroidery", href: "/embroidery" },
+  { name: "Heat transfer", href: "/heatTransfer" },
+  { name: "Screen Printing", href: "/screenprinting" },
+  { name: "Engraving", href: "/engraving" },
+  { name: "Learn ", href: "/lear" },
+  { name: "Support", href: "/support" },
 ];
 
 function HeaderMenu({
@@ -56,30 +58,37 @@ function HeaderMenu({
           <div className="flex grow flex-col gap-4 pt-2 sm:px-0 items-end ">
             <div className="flex w-full  justify-between pl-6 ">
               <div className=" relative w-full ">
-                <input
+                <ButtonGroup className="hidden md:flex absolute top-0 left-0 w-lg">
+                  <Input
+                    id="input-button-group"
+                    placeholder="Search Products..."
+                  />
+                  <Button variant="outline">Search</Button>
+                </ButtonGroup>
+                {/* <input
                   type="text"
                   onChange={(e) => setSearchText(e.target.value)}
                   value={searchText}
                   placeholder="Search Products..."
                   className="hidden md:block w-full grow  max-w-xl hover:ring-gray-400 ring-1 ring-gray-300 ring-inset text-gray-800  border-0 bg-gray-200 rounded-full  px-3 py-2 focus:outline-none"
-                />
-                {searchText ? (
+                /> */}
+                {/* {searchText ? (
                   <IoClose
                     onClick={() => setSearchText("")}
                     className="absolute top-2.5 right-57  text-gray-600"
                   />
                 ) : (
                   <IoSearchOutline className="hidden md:block absolute top-2.5 right-57  text-gray-600" />
-                )}
+                )}*/}
               </div>
 
               {/* Social Icons */}
               <div className="flex items-center justify-end w-full md:w-auto  pr-5 gap-3 ">
                 <ModeToggle />
-                {/* <Link href="#" className="hidden sm:flex  text-xl">
+                <Link href="#" className="hidden sm:flex  text-xl">
                   Shop
                 </Link>
-                <BsCart4 className=" text-2xl" /> */}
+                {/* <BsCart4 className=" text-2xl" /> */}
 
                 {!session ? (
                   <Link href="/sign-in">
