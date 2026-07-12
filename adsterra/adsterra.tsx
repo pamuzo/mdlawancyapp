@@ -13,7 +13,7 @@ export default function AdsterraBanner(): ReactElement {
       id: "adsterra-banner",
       src: "https://pl30319985.effectivecpmnetwork.com/a2ea7bcabf5991b9ed7f883535245f5b/invoke.js",
       strategy: "afterInteractive",
-      "data-cfasync": "false",
+      // "data-cfasync": "false",
     }),
     createElement("div", {
       id: "container-a2ea7bcabf5991b9ed7f883535245f5b",
