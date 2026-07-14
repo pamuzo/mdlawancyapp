@@ -14,7 +14,7 @@ export default function Hero() {
   const opacity = useTransform(scrollY, [0, 400], [1, 0]);
 
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden bg-slate-950">
+    <section className="relative  flex min-h-screen items-center overflow-hidden bg-slate-950">
       {/* Background Image */}
       <motion.div style={{ y: imageY }} className="absolute inset-0">
         <Image

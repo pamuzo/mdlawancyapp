@@ -225,7 +225,7 @@ export default function ScreenPrintingPage() {
         <Sparkles size={34} />
         <p className="eyebrow dark">Have a project in mind?</p>
         <h2>
-          LET&apos;S MAKE
+          LET&apos;S
           <br />
           SOMETHING <em>REAL.</em>
         </h2>
