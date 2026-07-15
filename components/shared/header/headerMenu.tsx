@@ -20,10 +20,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { usePathname } from "next/navigation";
-import { getSession } from "@/lib/session";
 
 const NAV_ITEMS = [
-  //   { name: "MDLawancy", href: "/" },
   { name: "Embroidery", href: "/embroidery" },
   { name: "Heat transfer", href: "/heatTransfer" },
   { name: "Screen Printing", href: "/screenprinting" },
