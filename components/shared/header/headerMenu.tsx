@@ -11,7 +11,6 @@ import {
   FaTwitter,
   FaYoutube,
 } from "react-icons/fa";
-import { IoClose, IoSearchOutline } from "react-icons/io5";
 import ModeToggle from "./mode-toggle";
 import { auth } from "@/lib/auth";
 
@@ -20,6 +19,8 @@ import { UserIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ButtonGroup } from "@/components/ui/button-group";
+import { usePathname } from "next/navigation";
+import { getSession } from "@/lib/session";
 
 const NAV_ITEMS = [
   //   { name: "MDLawancy", href: "/" },
@@ -27,7 +28,7 @@ const NAV_ITEMS = [
   { name: "Heat transfer", href: "/heatTransfer" },
   { name: "Screen Printing", href: "/screenprinting" },
   { name: "Engraving", href: "/engraving" },
-  { name: "Learn ", href: "/lear" },
+  { name: "Learn ", href: "/learn" },
   { name: "Support", href: "/support" },
 ];
 
@@ -37,7 +38,10 @@ function HeaderMenu({
   session: typeof auth.$Infer.Session | null;
 }) {
   const [open, setOpen] = useState(false);
-  const [searchText, setSearchText] = useState("");
+  // const session = getSession();
+  const user = session?.user;
+
+  const pathname = usePathname();
 
   return (
     <div>
@@ -50,7 +54,13 @@ function HeaderMenu({
         <div className="max-w-7xl mx-auto pt-3  sm:px-6 lg:px-8 flex items-center ">
           <div className="flex shrink-0 px-2 lg:w-[15%] ">
             <Link href="/">
-              <Image src="/images/logo.svg" alt="Logo" width={64} height={64} />
+              <Image
+                src="/images/logo.svg"
+                alt="Logo"
+                width={70}
+                height={70}
+                priority
+              />
             </Link>
           </div>
 
@@ -58,28 +68,13 @@ function HeaderMenu({
           <div className="flex grow flex-col gap-4 pt-2 sm:px-0 items-end ">
             <div className="flex w-full  justify-between pl-6 ">
               <div className=" relative w-full ">
-                <ButtonGroup className="hidden md:flex absolute top-0 left-0 w-lg">
+                <ButtonGroup className="hidden md:flex absolute top-0 left-0 w-full max-w-xl">
                   <Input
                     id="input-button-group"
                     placeholder="Search Products..."
                   />
                   <Button variant="outline">Search</Button>
                 </ButtonGroup>
-                {/* <input
-                  type="text"
-                  onChange={(e) => setSearchText(e.target.value)}
-                  value={searchText}
-                  placeholder="Search Products..."
-                  className="hidden md:block w-full grow  max-w-xl hover:ring-gray-400 ring-1 ring-gray-300 ring-inset text-gray-800  border-0 bg-gray-200 rounded-full  px-3 py-2 focus:outline-none"
-                /> */}
-                {/* {searchText ? (
-                  <IoClose
-                    onClick={() => setSearchText("")}
-                    className="absolute top-2.5 right-57  text-gray-600"
-                  />
-                ) : (
-                  <IoSearchOutline className="hidden md:block absolute top-2.5 right-57  text-gray-600" />
-                )}*/}
               </div>
 
               {/* Social Icons */}
@@ -94,43 +89,40 @@ function HeaderMenu({
                   <Link href="/sign-in">
                     <Button
                       variant={"ghost"}
-                      className="flex  items-center gap-2"
+                      className="flex  items-center text-2xl   hover:text-[#00425A] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00425A] font-semibol2"
                     >
-                      <UserIcon className="text-xl" />
+                      <UserIcon style={{ width: 24, height: 24 }} />
                       Sign In
                     </Button>
                   </Link>
                 ) : (
                   <Usermenu session={session} signOutUser={signOutUser} />
                 )}
-
-                {/* <Link
-                href="/sign-in"
-                variant="default"
-                // className="ml-4  min-w-[100px] items-center text-center px-4 py-2 text-sm font-medium rounded-md text-white bg-[#00425A] hover:bg-[#002e3f] transition-colors duration-300"
-              >
-                <FiUser className="text-[#00425A] text-2xl" />
-              </Link> */}
               </div>
             </div>
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex justify-between items-end-safe w-full  gap-1">
               {NAV_ITEMS.map((item) => (
-                <a
+                <Link
                   key={item.name}
                   href={item.href}
-                  className=" hover:font-bold px-2   transition-all duration-300"
+                  className={`px-2 transition ${
+                    pathname === item.href
+                      ? "font-bold text-primary"
+                      : "hover:font-bold"
+                  }`}
                 >
                   {item.name}
-                </a>
+                </Link>
               ))}
-              <h2 className="hidden lg:block  pl-8 text-lg font-bold">
-                {/* <span className="mr-1">
-                <IoCallOutline />
-              </span> */}
-                +2348140394714
-              </h2>
+
+              <a
+                href="tel:+2348140394714"
+                className="hidden lg:block pl-8 text-lg font-bold"
+              >
+                +234 814 039 4714
+              </a>
             </nav>
           </div>
 
@@ -145,11 +137,11 @@ function HeaderMenu({
               <span className="sr-only">Toggle menu</span>
               {open ? (
                 <svg
-                  className="h-6 w-6"
+                  className="h-8 w-8"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  strokeWidth={2}
+                  strokeWidth={3}
                   stroke="currentColor"
                 >
                   <path
@@ -160,11 +152,11 @@ function HeaderMenu({
                 </svg>
               ) : (
                 <svg
-                  className="h-6 w-6"
+                  className="h-8 w-8"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  strokeWidth={2}
+                  strokeWidth={3}
                   stroke="currentColor"
                 >
                   <path
@@ -183,30 +175,50 @@ function HeaderMenu({
           <div className="md:hidden  border-t border-gray-200" id="mobile-menu">
             <nav className="px-4 py-3 space-y-1">
               {NAV_ITEMS.map((item) => (
-                <a
+                <Link
                   key={item.name}
                   href={item.href}
-                  className="block px-3 py-2 rounded-md  hover:bg-gray-50 hover:text-gray-900 transition"
                   onClick={() => setOpen(false)}
+                  className={` transition 
+                    block px-3 py-2 rounded-md  hover:bg-gray-50 hover:text-gray-900 
+                    ${
+                      pathname === item.href
+                        ? "font-bold text-primary"
+                        : "hover:font-bold"
+                    }`}
                 >
                   {item.name}
-                </a>
+                </Link>
               ))}
               <a
-                href="/login"
+                href={user ? "/profile" : "/sign-in"}
                 className="block px-3 py-2 mt-2  rounded-md "
                 onClick={() => setOpen(false)}
               >
-                Sign in
+                {user ? `Profile (${user.email})` : "Sign in"}
               </a>
 
               {/* Social icons in mobile menu */}
               <div className="flex justify-center gap-4 pt-3 ">
-                <FaFacebookSquare size={22} />
-                <FaInstagram size={22} />
-                <FaTiktok size={22} />
-                <FaTwitter size={22} />
-                <FaYoutube size={22} />
+                <Link href="" target="_blank" aria-label="Facebook">
+                  <FaFacebookSquare size={22} />
+                </Link>
+
+                <Link href="" target="_blank" aria-label="Instagram">
+                  <FaInstagram size={22} />
+                </Link>
+
+                <Link href="" target="_blank" aria-label="Tiktok">
+                  <FaTiktok size={22} />
+                </Link>
+
+                <Link href="" target="_blank" aria-label="Twitter">
+                  <FaTwitter size={22} />
+                </Link>
+
+                <Link href="" target="_blank" aria-label="Youtube">
+                  <FaYoutube size={22} />
+                </Link>
               </div>
             </nav>
           </div>
