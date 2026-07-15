@@ -6,9 +6,9 @@
 @custom-variant dark (&:is(.dark *));
 
 @layer utilities {
-  /* .wrapper {
+  .wrapper {
     @apply max-w-7xl lg:mx-auto p-5 md:px-10 w-full;
-  } */
+  }
 
   .flex-start {
     @apply flex justify-start items-center;

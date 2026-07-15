@@ -7,6 +7,7 @@ import {
   SecurityCard,
 } from "@/components/profile/security-card";
 import { getSession } from "@/lib/get-session";
+import AdsterraBanner from "@/adsterra/adsterra";
 
 export default async function ProfilePage() {
   const session = await getSession();
@@ -43,6 +44,7 @@ export default async function ProfilePage() {
           <RecentActivities user={user} />
         </div>
       </div>
+      <AdsterraBanner />
     </main>
   );
 }
