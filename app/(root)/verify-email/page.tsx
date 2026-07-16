@@ -2,6 +2,7 @@ import { getSession } from "@/lib/get-session";
 import { Metadata } from "next";
 import { redirect, unauthorized } from "next/navigation";
 import { ResendVerificationButton } from "./resend-verification-btn";
+import AdsterraBanner from "@/adsterra/adsterra";
 
 export const metadata: Metadata = {
   title: "Verify Email",
@@ -28,6 +29,7 @@ export default async function VerifyEmailPage() {
         </div>
         <ResendVerificationButton email={user.email} />
       </div>
+      <AdsterraBanner />
     </main>
   );
 }

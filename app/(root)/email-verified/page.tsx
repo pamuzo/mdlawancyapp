@@ -1,3 +1,4 @@
+import AdsterraBanner from "@/adsterra/adsterra";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/db/prisma";
 import { getSession } from "@/lib/get-session";
@@ -37,6 +38,7 @@ export default async function EmailVerifiedPage() {
           <Link href="/profile">Go to profile</Link>
         </Button>
       </div>
+      <AdsterraBanner />
     </main>
   );
 }
