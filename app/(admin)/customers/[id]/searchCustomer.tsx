@@ -187,11 +187,11 @@ export default function SearchCustomer({
     return range;
   };
 
-  const handleDeleteBooking = async (booking: Booking) => {
+  const handleDeleteBooking = async (booking: customerBookings) => {
     const formData = new FormData();
 
     formData.append("bookingId", booking.id);
-    formData.append("userId", booking.userId);
+    formData.append("userId", customer.id);
     formData.append("balance", booking.balance.toString());
     formData.append("totalPrice", booking.totalPrice.toString());
 
