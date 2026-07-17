@@ -45,9 +45,10 @@ import {
   SheetFooter,
 } from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
-import { createDebt } from "@/lib/actions/booking.action";
+import { createDebt, deleteBooking } from "@/lib/actions/booking.action";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import ViewBooking from "@/components/shared/admin/viewBooking";
 
 type customerBookings = {
   id: string;
@@ -66,6 +67,18 @@ type customer = {
   id: string;
   name: string;
 };
+type Booking = {
+  id: string;
+  userId: string;
+  jobType: string;
+  status: string;
+  quantity: number;
+  totalPrice: number;
+  deposit: number;
+  balance: number;
+  deliveryDate: string;
+  paymentMethod: string;
+};
 
 const ITEMS_PER_PAGE = 10;
 export default function SearchCustomer({
@@ -82,6 +95,7 @@ export default function SearchCustomer({
   const [amount, setAmount] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] =
     useState<customerBookings | null>(null);
 
@@ -171,6 +185,25 @@ export default function SearchCustomer({
     }
 
     return range;
+  };
+
+  const handleDeleteBooking = async (booking: Booking) => {
+    const formData = new FormData();
+
+    formData.append("bookingId", booking.id);
+    formData.append("userId", booking.userId);
+    formData.append("balance", booking.balance.toString());
+    formData.append("totalPrice", booking.totalPrice.toString());
+
+    const result = await deleteBooking(undefined, formData);
+
+    if (result.success) {
+      toast.success("Booking deleted successfully");
+    } else {
+      toast.error("Failed to delete booking");
+    }
+    router.refresh();
+    console.log(result);
   };
 
   useEffect(() => {
@@ -280,7 +313,14 @@ export default function SearchCustomer({
                         </DropdownMenuTrigger>
 
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem>View Details</DropdownMenuItem>
+                          {/* <DropdownMenuItem
+                            onSelect={(e) => {
+                              e.preventDefault(); // prevent dropdown from closing if needed
+                            }}
+                          > */}
+                          <ViewBooking bookingId={booking.id} />
+                          {/* </DropdownMenuItem> */}
+                          {/* to clear the debt */}
                           {booking.balance > 0 && (
                             <DropdownMenuItem
                               onClick={() => {
@@ -295,7 +335,11 @@ export default function SearchCustomer({
                           )}
                           <DropdownMenuItem>Completed</DropdownMenuItem>
                           <DropdownMenuItem>Cancel</DropdownMenuItem>
-                          <DropdownMenuItem>Delete</DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => handleDeleteBooking(booking)}
+                          >
+                            Delete
+                          </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
@@ -501,6 +545,13 @@ export default function SearchCustomer({
             )} */}
           </SheetContent>
         </Sheet>
+
+        {customerBookings.length > 0 && (
+          <div className="text-sm text-muted-foreground">
+            Showing {filteredBookings.length} of {customerBookings.length}{" "}
+            bookings
+          </div>
+        )}
       </Card>
     </div>
   );

@@ -34,9 +34,13 @@ import {
   PaginationPrevious,
   PaginationEllipsis,
 } from "@/components/ui/pagination";
+import { deleteBooking } from "@/lib/actions/booking.action";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 type Booking = {
   id: string;
+  userId: string;
   jobType: string;
   status: string;
   quantity: number;
@@ -72,6 +76,26 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE,
   );
+  const router = useRouter();
+
+  const handleDeleteBooking = async (booking: Booking) => {
+    const formData = new FormData();
+
+    formData.append("bookingId", booking.id);
+    formData.append("userId", booking.userId);
+    formData.append("balance", booking.balance.toString());
+    formData.append("totalPrice", booking.totalPrice.toString());
+
+    const result = await deleteBooking(undefined, formData);
+
+    if (result.success) {
+      toast.success("Booking deleted successfully");
+    } else {
+      toast.error("Failed to delete booking");
+    }
+    router.refresh();
+    console.log(result);
+  };
 
   const getPageNumbers = () => {
     const delta = 1; // how many pages around current
@@ -196,6 +220,11 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
                           <DropdownMenuItem>Edit Booking</DropdownMenuItem>
 
                           <DropdownMenuItem>Update Status</DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => handleDeleteBooking(booking)}
+                          >
+                            Delete
+                          </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>

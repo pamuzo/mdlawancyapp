@@ -90,6 +90,9 @@ export async function getBooking() {
     orderBy: {
       createdAt: "desc",
     },
+    include: {
+      user: true,
+    },
   });
   return covertToPlainObject(data);
 }
@@ -175,13 +178,11 @@ export async function createDebt(prevState: any, formData: FormData) {
 
 // clear all debts for a user
 export async function clearAllDebts(prevState: any, formData: FormData) {
-  console.log([...formData.entries()]);
   try {
     const userId = formData.get("userId") as string;
     const bookingId = formData.get("bookingId") as string;
     const amount = Number(formData.get("amount"));
     const paymentMethod = formData.get("paymentMethod") as string;
-    console.log([...formData.entries()]);
 
     if (!userId || !bookingId || !amount || !paymentMethod) {
       return {
@@ -223,6 +224,54 @@ export async function clearAllDebts(prevState: any, formData: FormData) {
     return {
       success: false,
       message: error?.body?.message || error?.message || "something want wrong",
+    };
+  }
+}
+
+// to delete or cancel a booking
+export async function deleteBooking(prevState: any, formData: FormData) {
+  try {
+    const userId = formData.get("userId") as string;
+    const bookingId = formData.get("bookingId") as string;
+    const balance = Number(formData.get("balance"));
+    const totalPrice = Number(formData.get("totalPrice"));
+
+    if (!userId || !bookingId) {
+      return {
+        success: false,
+        message: "Missing required fields",
+      };
+    }
+
+    await prisma.booking.delete({
+      where: {
+        id: bookingId,
+      },
+    });
+
+    await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        totalDebits: {
+          decrement: balance,
+        },
+        totalSpent: {
+          decrement: totalPrice,
+        },
+      },
+    });
+
+    return {
+      success: true,
+      message: "Booking deleted successfully",
+      timestamp: Date.now(),
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error?.body?.message || error?.message || "something went wrong",
     };
   }
 }

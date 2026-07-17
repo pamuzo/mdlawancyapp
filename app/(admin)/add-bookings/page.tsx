@@ -77,6 +77,19 @@ export default function NewBookingPage() {
   );
   const overpaid = balance < 0;
 
+  const resetForm = () => {
+    formRef.current?.reset();
+
+    setCustomer(null);
+    setJobType("");
+    setJobDetails("");
+    setQuantity(1);
+    setCost("");
+    setDeposit("");
+    setPaymentMethod("");
+    setDeliveryDate("");
+  };
+
   useEffect(() => {
     if (data?.success) {
       toast.success("Booked  successfully!", {
@@ -84,18 +97,8 @@ export default function NewBookingPage() {
       });
 
       const timeoutId = window.setTimeout(() => {
-        formRef.current?.reset();
-
-        setCustomer(null);
-        setJobType("");
-        setJobDetails("");
-        setQuantity(1);
-        setCost("");
-        setDeposit("");
-        setPaymentMethod("");
-        setDeliveryDate("");
+        resetForm();
       }, 0);
-
       return () => window.clearTimeout(timeoutId);
     }
 
@@ -104,18 +107,8 @@ export default function NewBookingPage() {
     }
   }, [data.timestamp]);
 
-  // const resMessage = setTimeout(() => {
-  //   <div
-  //     className={`rounded-md p-3 text-sm ${
-  //       data.success ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-  //     }`}
-  //   >
-  //     {data.message}
-  //   </div>;
-  // }, 3000);
-
   return (
-    <div className="mx-auto max-w-4xl p-6">
+    <div>
       <Card>
         <CardHeader>
           <CardTitle>Create New Booking</CardTitle>
@@ -155,7 +148,7 @@ export default function NewBookingPage() {
             </CardContent>
           </Card>
 
-          <form action={action} className="space-y-6 pt-5">
+          <form ref={formRef} action={action} className="space-y-6 pt-5">
             <div className="grid gap-4 md:grid-cols-2">
               <div>
                 <Label>Job Type</Label>
@@ -335,7 +328,7 @@ export default function NewBookingPage() {
             </Card>
 
             <div className="flex justify-end gap-3">
-              <Button variant="outline" type="button">
+              <Button variant="outline" type="button" onClick={resetForm}>
                 Cancel
               </Button>
 

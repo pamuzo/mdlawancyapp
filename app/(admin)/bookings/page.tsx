@@ -47,7 +47,7 @@ export default async function Bookings() {
   );
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 ">
       <Link href={"/add-bookings"}>
         <h1 className="text-2xl font-bold">Add New Booking</h1>
       </Link>
