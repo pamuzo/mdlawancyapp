@@ -9,6 +9,15 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
+import BookingDetails from "../bookings/bookingDetails";
+import { MoreHorizontal } from "lucide-react";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuItem,
+} from "../ui/dropdown-menu";
 
 type Props = {
   user: {
@@ -81,9 +90,22 @@ export async function RecentActivities({ user }: Props) {
     .filter((booking) => booking.userId === user.id)
     .slice(0, 7);
 
+  const booked = bookings
+    //  .filter((booking) => booking.id === id)
+    .map((booking) => ({
+      ...booking,
+      user: {
+        ...booking.user,
+        phoneNumber: booking.user.phoneNumber || undefined,
+      },
+    }));
+
   return (
     <div className="rounded-3xl bg-white p-6 shadow-sm dark:bg-slate-900">
-      <h2 className="mb-6 text-xl font-semibold">Recent Activities</h2>
+      <div className="flex flex-row justify-between font-semibold">
+        <h2 className="mb-6 text-xl ">Recent Activities</h2>
+        <Link href={"/userbooking"}>View all </Link>
+      </div>
       <Table>
         <TableHeader>
           <TableRow>
@@ -108,9 +130,14 @@ export async function RecentActivities({ user }: Props) {
                   <div
                     className={`w-3 h-3 rounded-full ${bgColor[stockLevel]}`}
                   />
-                  <span className="text-sm font-medium ">
+                  {/* <Button onClick={() => BookingDetails(booked)}> */}
+                  <span
+                    // onClick={() => BookingDetails(booked)}
+                    className="text-sm font-medium "
+                  >
                     {booking.jobType}
                   </span>
+                  {/* </Button> */}
                 </TableCell>
                 <TableCell className="text-sm font-medium">
                   {booking.totalPrice.toLocaleString()}
@@ -119,6 +146,21 @@ export async function RecentActivities({ user }: Props) {
                   className={`text-sm font-medium ${textColor[stockLevel]}`}
                 >
                   {booking.deposit.toLocaleString()}
+                </TableCell>
+                <TableCell className="text-right">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <MoreHorizontal className="h-4 w-4" />
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem>
+                        <Link href={`/userbooking/${booking.id}`}>
+                          View Details
+                        </Link>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </TableCell>
               </TableRow>
             );

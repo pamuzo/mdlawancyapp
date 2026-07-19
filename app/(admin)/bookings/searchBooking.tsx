@@ -1,6 +1,7 @@
 "use client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
 import {
   Select,
   SelectContent,
@@ -49,6 +50,12 @@ type Booking = {
   balance: number;
   deliveryDate: string;
   paymentMethod: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    phoneNumber?: string;
+  };
 };
 
 const ITEMS_PER_PAGE = 10;
@@ -78,6 +85,7 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
   );
   const router = useRouter();
 
+  // to delete a booking
   const handleDeleteBooking = async (booking: Booking) => {
     const formData = new FormData();
 
@@ -130,6 +138,9 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
   return (
     <div className="space-y-6 ">
       <Card>
+        <CardHeader>
+          <CardTitle>Search bookings</CardTitle>
+        </CardHeader>
         <CardContent className="flex flex-col gap-4 pt-6 md:flex-row">
           <Input
             placeholder="Search bookings..."
@@ -176,7 +187,7 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
                   <TableHead>Balance</TableHead>
                   <TableHead>Delivery</TableHead>
                   <TableHead>Payment</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead className={"text-right "}>Actions</TableHead>
                 </TableRow>
               </TableHeader>
 
@@ -186,7 +197,11 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
                     <TableCell className="font-medium">
                       {(currentPage - 1) * ITEMS_PER_PAGE + index + 1}
                     </TableCell>
-                    <TableCell>{booking.jobType}</TableCell>
+                    <TableCell>
+                      <Link href={`/bookings/${booking.id}`}>
+                        {booking.jobType}
+                      </Link>
+                    </TableCell>
 
                     <TableCell>
                       <StatusBadge status={booking.status} />
@@ -207,7 +222,6 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
                     </TableCell>
 
                     <TableCell>{booking.paymentMethod}</TableCell>
-
                     <TableCell className="text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger>
@@ -215,7 +229,11 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
                         </DropdownMenuTrigger>
 
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem>View Details</DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <Link href={`/bookings/${booking.id}`}>
+                              View Details
+                            </Link>
+                          </DropdownMenuItem>
 
                           <DropdownMenuItem>Edit Booking</DropdownMenuItem>
 

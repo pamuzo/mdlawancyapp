@@ -2,7 +2,8 @@ import { ProfileStats } from "@/components/profile/profile-stats";
 
 import { allCustomers } from "@/lib/actions/customers.action";
 import { getBooking } from "@/lib/actions/booking.action";
-import SearchCustomer from "./searchCustomer";
+import SearchCustomer from "../../../../components/bookings/userBooking";
+import UserBooking from "../../../../components/bookings/userBooking";
 
 export default async function CustomerPage({
   params,
@@ -29,8 +30,8 @@ export default async function CustomerPage({
 
   return (
     <div className="flex flex-col gap-4">
-      <div>This is the customers {customer?.name}</div>
-      <div>{customer?.totalSpent?.toLocaleString()}</div>
+      <div> Customers: {customer?.name}</div>
+      <div> Total Spent: {customer?.totalSpent?.toLocaleString()}</div>
       {customer ? (
         <>
           <ProfileStats
@@ -44,7 +45,7 @@ export default async function CustomerPage({
               phoneNumber: customer.phoneNumber ?? "",
             }}
           />
-          <SearchCustomer
+          <UserBooking
             customer={customer}
             customerBookings={customerBookings}
           />

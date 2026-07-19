@@ -46,12 +46,13 @@ import {
 } from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
 import { createDebt, deleteBooking } from "@/lib/actions/booking.action";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
-import ViewBooking from "@/components/shared/admin/viewBooking";
+import Link from "next/link";
 
 type customerBookings = {
   id: string;
+  userId: string;
   jobType: string;
   status: string;
   quantity: number;
@@ -67,21 +68,9 @@ type customer = {
   id: string;
   name: string;
 };
-type Booking = {
-  id: string;
-  userId: string;
-  jobType: string;
-  status: string;
-  quantity: number;
-  totalPrice: number;
-  deposit: number;
-  balance: number;
-  deliveryDate: string;
-  paymentMethod: string;
-};
 
 const ITEMS_PER_PAGE = 10;
-export default function SearchCustomer({
+export default function UserBooking({
   customerBookings,
   customer,
 }: {
@@ -106,6 +95,7 @@ export default function SearchCustomer({
   });
 
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (state.timestamp === 0) return;
@@ -191,7 +181,8 @@ export default function SearchCustomer({
     const formData = new FormData();
 
     formData.append("bookingId", booking.id);
-    formData.append("userId", customer.id);
+    // formData.append("userId", customer.id);
+    // formData.append("userId", booking.userId);
     formData.append("balance", booking.balance.toString());
     formData.append("totalPrice", booking.totalPrice.toString());
 
@@ -216,8 +207,13 @@ export default function SearchCustomer({
   const isInvalidPaymentMethod = paymentMethod === "";
 
   return (
-    <div className="space-y-6 ">
+    <div
+      className={`space-y-6  ${pathname === "/userbooking" && "mx-auto max-w-7xl"}`}
+    >
       <Card>
+        <CardHeader>
+          <CardTitle>Search {customer.name} booking</CardTitle>
+        </CardHeader>
         <CardContent className="flex flex-col gap-4 pt-6 md:flex-row">
           <Input
             placeholder="Search bookings..."
@@ -251,9 +247,9 @@ export default function SearchCustomer({
       </Card>
 
       {/* Table */}
-      <Card>
+      <Card className="my-4">
         <CardHeader>
-          <CardTitle>All Bookings</CardTitle>
+          <CardTitle>All Bookings for {customer.name}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
@@ -269,7 +265,11 @@ export default function SearchCustomer({
                   <TableHead>Balance</TableHead>
                   <TableHead>Date</TableHead>
                   <TableHead>Payment</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead
+                    className={`text-right ${pathname === "/userbooking" && "hidden"}`}
+                  >
+                    Actions
+                  </TableHead>
                 </TableRow>
               </TableHeader>
 
@@ -281,7 +281,13 @@ export default function SearchCustomer({
                     >
                       {(currentPage - 1) * ITEMS_PER_PAGE + index + 1}
                     </TableCell>
-                    <TableCell>{booking.jobType}</TableCell>
+                    <TableCell>
+                      <Link
+                        href={`/${pathname === "/userbooking" ? "userbooking" : "bookings"}/${booking.id}`}
+                      >
+                        {booking.jobType}
+                      </Link>
+                    </TableCell>
 
                     <TableCell>
                       <StatusBadge status={booking.status} />
@@ -306,20 +312,23 @@ export default function SearchCustomer({
                     </TableCell>
                     <TableCell>{booking.paymentMethod}</TableCell>
 
-                    <TableCell className="text-right">
+                    <TableCell
+                      className={`text-right ${pathname === "/userbooking" && "hidden"}`}
+                    >
                       <DropdownMenu>
                         <DropdownMenuTrigger>
                           <MoreHorizontal className="h-4 w-4" />
                         </DropdownMenuTrigger>
 
                         <DropdownMenuContent align="end">
-                          {/* <DropdownMenuItem
-                            onSelect={(e) => {
-                              e.preventDefault(); // prevent dropdown from closing if needed
-                            }}
-                          > */}
-                          <ViewBooking bookingId={booking.id} />
-                          {/* </DropdownMenuItem> */}
+                          <DropdownMenuItem>
+                            <Link
+                              href={`/${pathname === "/userbooking" ? "userbooking" : "bookings"}/${booking.id}`}
+                            >
+                              View Details
+                            </Link>
+                          </DropdownMenuItem>
+
                           {/* to clear the debt */}
                           {booking.balance > 0 && (
                             <DropdownMenuItem
@@ -545,13 +554,6 @@ export default function SearchCustomer({
             )} */}
           </SheetContent>
         </Sheet>
-
-        {customerBookings.length > 0 && (
-          <div className="text-sm text-muted-foreground">
-            Showing {filteredBookings.length} of {customerBookings.length}{" "}
-            bookings
-          </div>
-        )}
       </Card>
     </div>
   );
