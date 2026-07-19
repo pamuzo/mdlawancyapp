@@ -54,7 +54,7 @@ type Booking = {
     id: string;
     name: string;
     email: string;
-    phoneNumber?: string;
+    phoneNumber: string | null;
   };
 };
 
