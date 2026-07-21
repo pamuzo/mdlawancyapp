@@ -23,6 +23,7 @@ import { Label } from "@/components/ui/label";
 import { UserAutocomplete } from "@/components/user-autocomplete";
 import { useFormStatus } from "react-dom";
 import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 
 interface Customer {
   id: string;
@@ -41,7 +42,14 @@ function SubmitButton({ customer }: SubmitButtonProps) {
 
   return (
     <Button type="submit" disabled={!customer}>
-      {pending ? "Booking..." : "Create Booking"}
+      {pending ? (
+        <>
+          <Spinner data-icon="inline-start" />
+          Booking...
+        </>
+      ) : (
+        "Create Booking"
+      )}
     </Button>
   );
 }
@@ -76,6 +84,8 @@ export default function NewBookingPage() {
     [totalPrice, depositAmount],
   );
   const overpaid = balance < 0;
+
+  const today = new Date().toISOString().split("T")[0];
 
   const resetForm = () => {
     formRef.current?.reset();
@@ -169,7 +179,7 @@ export default function NewBookingPage() {
                     <SelectItem value="SCREENPRINTING">
                       Screen Printing
                     </SelectItem>
-                    <SelectItem value="STONEING">Stoneing </SelectItem>
+                    <SelectItem value="STONING">Stoning </SelectItem>
                     <SelectItem value="CUSTOMIZING">Customizing</SelectItem>
                     <SelectItem value="CUTTING">Cutting</SelectItem>
                     <SelectItem value="COLORPRINTING">
@@ -282,6 +292,7 @@ export default function NewBookingPage() {
                 type="date"
                 placeholder="Pickup date"
                 value={deliveryDate}
+                min={today}
                 onChange={(e) => setDeliveryDate(e.target.value)}
                 // required
               />

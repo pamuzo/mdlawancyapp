@@ -228,13 +228,14 @@ export async function clearAllDebts(prevState: any, formData: FormData) {
   }
 }
 
-// to delete or cancel a booking
+// to  cancel a booking
 export async function deleteBooking(prevState: any, formData: FormData) {
   try {
     const userId = formData.get("userId") as string;
     const bookingId = formData.get("bookingId") as string;
     const balance = Number(formData.get("balance"));
     const totalPrice = Number(formData.get("totalPrice"));
+    const quantity = Number(formData.get("quantity"));
 
     if (!userId || !bookingId) {
       return {
@@ -243,9 +244,18 @@ export async function deleteBooking(prevState: any, formData: FormData) {
       };
     }
 
-    await prisma.booking.delete({
+    await prisma.booking.update({
       where: {
         id: bookingId,
+      },
+      data: {
+        status: "CANCELLED",
+
+        // quantity: 0,
+        // totalPrice: 0,
+        // deposit: 0,
+        // balance: 0,
+        // paymentMethod: "refund",
       },
     });
 
@@ -260,12 +270,15 @@ export async function deleteBooking(prevState: any, formData: FormData) {
         totalSpent: {
           decrement: totalPrice,
         },
+        totalJobs: {
+          decrement: quantity,
+        },
       },
     });
 
     return {
       success: true,
-      message: "Booking deleted successfully",
+      message: "Booking canceled successfully",
       timestamp: Date.now(),
     };
   } catch (error: any) {
@@ -274,4 +287,16 @@ export async function deleteBooking(prevState: any, formData: FormData) {
       message: error?.body?.message || error?.message || "something went wrong",
     };
   }
+}
+
+// to complete a status
+export async function CompleteStatus(bookingId: string) {
+  return await prisma.booking.update({
+    where: {
+      id: bookingId,
+    },
+    data: {
+      status: "COMPLETED",
+    },
+  });
 }

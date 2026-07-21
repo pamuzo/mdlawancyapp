@@ -19,7 +19,7 @@ export default async function EditProfile({
   if (user?.id !== id) redirect("/forbidden");
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 max-w-7xl mx-auto pt-3  sm:px-6 lg:px-8">
       <Card>
         <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6">
           <div>

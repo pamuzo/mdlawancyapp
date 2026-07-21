@@ -181,8 +181,7 @@ export default function UserBooking({
     const formData = new FormData();
 
     formData.append("bookingId", booking.id);
-    // formData.append("userId", customer.id);
-    // formData.append("userId", booking.userId);
+    formData.append("userId", customer.id);
     formData.append("balance", booking.balance.toString());
     formData.append("totalPrice", booking.totalPrice.toString());
 
@@ -208,7 +207,7 @@ export default function UserBooking({
 
   return (
     <div
-      className={`space-y-6  ${pathname === "/userbooking" && "mx-auto max-w-7xl"}`}
+      className={`space-y-6  ${pathname === "/userbooking" && "max-w-7xl mx-auto pt-3  sm:px-6 lg:px-8"}`}
     >
       <Card>
         <CardHeader>
@@ -343,11 +342,10 @@ export default function UserBooking({
                             </DropdownMenuItem>
                           )}
                           <DropdownMenuItem>Completed</DropdownMenuItem>
-                          <DropdownMenuItem>Cancel</DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => handleDeleteBooking(booking)}
                           >
-                            Delete
+                            Cancel
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>

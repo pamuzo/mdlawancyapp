@@ -35,7 +35,7 @@ import {
   PaginationPrevious,
   PaginationEllipsis,
 } from "@/components/ui/pagination";
-import { deleteBooking } from "@/lib/actions/booking.action";
+import { CompleteStatus, deleteBooking } from "@/lib/actions/booking.action";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -93,13 +93,14 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
     formData.append("userId", booking.userId);
     formData.append("balance", booking.balance.toString());
     formData.append("totalPrice", booking.totalPrice.toString());
+    formData.append("quantity", booking.quantity.toString());
 
     const result = await deleteBooking(undefined, formData);
 
     if (result.success) {
-      toast.success("Booking deleted successfully");
+      toast.success("Booking canceled successfully");
     } else {
-      toast.error("Failed to delete booking");
+      toast.error("Failed to cancel booking");
     }
     router.refresh();
     console.log(result);
@@ -180,12 +181,13 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
                 <TableRow>
                   <TableHead>SN</TableHead>
                   <TableHead>Job Type</TableHead>
+                  <TableHead>Customer</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Qty</TableHead>
                   <TableHead>Total</TableHead>
                   <TableHead>Deposit</TableHead>
                   <TableHead>Balance</TableHead>
-                  <TableHead>Delivery</TableHead>
+                  {/* <TableHead>Delivery</TableHead> */}
                   <TableHead>Payment</TableHead>
                   <TableHead className={"text-right "}>Actions</TableHead>
                 </TableRow>
@@ -204,6 +206,10 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
                     </TableCell>
 
                     <TableCell>
+                      <StatusBadge status={booking.user.name} />
+                    </TableCell>
+
+                    <TableCell>
                       <StatusBadge status={booking.status} />
                     </TableCell>
 
@@ -215,11 +221,15 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
 
                     <TableCell>₦{booking.deposit.toLocaleString()}</TableCell>
 
-                    <TableCell>₦{booking.balance.toLocaleString()}</TableCell>
-
-                    <TableCell>
-                      {new Date(booking.deliveryDate).toLocaleDateString()}
+                    <TableCell
+                      className={`${booking.balance > 0 && "text-red-600"}`}
+                    >
+                      ₦{booking.balance.toLocaleString()}
                     </TableCell>
+
+                    {/* <TableCell>
+                      {new Date(booking.deliveryDate).toLocaleDateString()}
+                    </TableCell> */}
 
                     <TableCell>{booking.paymentMethod}</TableCell>
                     <TableCell className="text-right">
@@ -235,13 +245,41 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
                             </Link>
                           </DropdownMenuItem>
 
-                          <DropdownMenuItem>Edit Booking</DropdownMenuItem>
-
-                          <DropdownMenuItem>Update Status</DropdownMenuItem>
                           <DropdownMenuItem
+                            className={
+                              ["CANCELLED", "COMPLETED"].includes(
+                                booking.status,
+                              )
+                                ? "hidden"
+                                : ""
+                            }
+                          >
+                            Edit Booking
+                          </DropdownMenuItem>
+
+                          <DropdownMenuItem
+                            onClick={() => CompleteStatus(booking.id)}
+                            className={
+                              ["CANCELLED", "COMPLETED"].includes(
+                                booking.status,
+                              )
+                                ? "hidden"
+                                : ""
+                            }
+                          >
+                            Completed
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className={
+                              ["CANCELLED", "COMPLETED"].includes(
+                                booking.status,
+                              )
+                                ? "hidden"
+                                : ""
+                            }
                             onClick={() => handleDeleteBooking(booking)}
                           >
-                            Delete
+                            Cancel
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
