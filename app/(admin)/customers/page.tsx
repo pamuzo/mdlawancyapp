@@ -22,6 +22,36 @@ import Link from "next/link";
 
 export default async function CustomersPage() {
   const customer = await allCustomers();
+
+  const getTotalSpent = customer.map((totalspent) =>
+    Number(totalspent.totalSpent),
+  );
+
+  const getTotalQuantity = customer.map((totalquantity) =>
+    Number(totalquantity.totalJobs),
+  );
+  const totalQuantityOfAllUser = getTotalQuantity.reduce(
+    (accumulator, current) => accumulator + current,
+    0,
+  );
+
+  const totalSpentOfAllUser = getTotalSpent.reduce(
+    (accumulator, current) => accumulator + current,
+    0,
+  );
+
+  const sortedCustomers = [...customer].sort((a, b) => {
+    const reputationA =
+      ((Number(a?.totalSpent) / totalSpentOfAllUser) * 0.7 +
+        (Number(a?.totalJobs) / totalQuantityOfAllUser) * 0.3) *
+      100;
+    const reputationB =
+      ((Number(b?.totalSpent) / totalSpentOfAllUser) * 0.7 +
+        (Number(b?.totalJobs) / totalQuantityOfAllUser) * 0.3) *
+      100;
+    return reputationB - reputationA;
+  });
+
   return (
     <div>
       <Card>
@@ -39,12 +69,13 @@ export default async function CustomersPage() {
                 <TableHead>Email</TableHead>
                 <TableHead>Role</TableHead>
                 <TableHead>Verify</TableHead>
+                <TableHead>Reputation</TableHead>
                 <TableHead className="text-right">Action</TableHead>
               </TableRow>
             </TableHeader>
 
             <TableBody>
-              {customer.map((customer, index) => (
+              {sortedCustomers.map((customer, index) => (
                 <TableRow key={customer.id ?? index}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>
@@ -60,6 +91,16 @@ export default async function CustomersPage() {
                       ? "Verified"
                       : "Unverified"}
                   </TableCell>
+                  <TableCell>
+                    {(
+                      ((Number(customer?.totalSpent) / totalSpentOfAllUser) *
+                        0.7 +
+                        (Number(customer?.totalJobs) / totalQuantityOfAllUser) *
+                          0.3) *
+                      100
+                    ).toFixed(0)}
+                    %
+                  </TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger>
@@ -70,13 +111,15 @@ export default async function CustomersPage() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem>
-                          <Link href={`/customers/${customer.id}`}>Edit</Link>
+                          <Link href={`/customers/${customer.id}`}>
+                            View Details
+                          </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem>Duplicate</DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem variant="destructive">
+                        {/* <DropdownMenuItem>Duplicate</DropdownMenuItem>
+                        <DropdownMenuSeparator /> */}
+                        {/* <DropdownMenuItem variant="destructive">
                           Delete
-                        </DropdownMenuItem>
+                        </DropdownMenuItem> */}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>

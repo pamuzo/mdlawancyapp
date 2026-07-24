@@ -101,7 +101,7 @@ export async function RecentActivities({ user }: Props) {
     }));
 
   return (
-    <div className="rounded-3xl bg-white p-6 shadow-sm dark:bg-slate-900">
+    <div className="rounded-3xl overflow-hidden bg-white p-6 shadow-sm dark:bg-slate-900">
       <div className="flex flex-row justify-between font-semibold">
         <h2 className="mb-6 text-xl ">Recent Activities</h2>
         <Link href={"/userbooking"}>View all </Link>
@@ -135,7 +135,9 @@ export async function RecentActivities({ user }: Props) {
                     // onClick={() => BookingDetails(booked)}
                     className="text-sm font-medium "
                   >
-                    {booking.jobType}
+                    <Link href={`/userbooking/${booking.id}`}>
+                      {booking.jobType}
+                    </Link>
                   </span>
                   {/* </Button> */}
                 </TableCell>

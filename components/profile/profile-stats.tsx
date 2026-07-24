@@ -20,6 +20,9 @@ type Props = {
 };
 export async function ProfileStats({ user }: Props) {
   const allUser = await allCustomers();
+  const session = await getSession();
+  const adminUser = session?.user;
+
   const getTotalSpent = allUser.map((totalspent) =>
     Number(totalspent.totalSpent),
   );
@@ -36,9 +39,6 @@ export async function ProfileStats({ user }: Props) {
     (accumulator, current) => accumulator + current,
     0,
   );
-
-  const session = await getSession();
-  const adminUser = session?.user;
 
   const reputation =
     ((Number(user?.totalSpent) / totalSpentOfAllUser) * 0.7 +

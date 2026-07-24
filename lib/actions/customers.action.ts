@@ -60,6 +60,8 @@ export async function searchUsers(search: string) {
       image: true,
       businessName: true,
       phoneNumber: true,
+      totalSpent: true,
+      totalJobs: true,
     },
 
     take: 10,

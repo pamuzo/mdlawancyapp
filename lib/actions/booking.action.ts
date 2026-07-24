@@ -291,12 +291,24 @@ export async function deleteBooking(prevState: any, formData: FormData) {
 
 // to complete a status
 export async function CompleteStatus(bookingId: string) {
-  return await prisma.booking.update({
-    where: {
-      id: bookingId,
-    },
-    data: {
-      status: "COMPLETED",
-    },
-  });
+  try {
+    await prisma.booking.update({
+      where: {
+        id: bookingId,
+      },
+      data: {
+        status: "COMPLETED",
+      },
+    });
+    return {
+      success: true,
+      message: "Booking completed successfully",
+      timestamp: Date.now(),
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error?.body?.message || error?.message || "something went wrong",
+    };
+  }
 }
