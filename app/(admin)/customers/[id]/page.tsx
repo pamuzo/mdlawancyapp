@@ -4,6 +4,7 @@ import { allCustomers } from "@/lib/actions/customers.action";
 import { getBooking } from "@/lib/actions/booking.action";
 import SearchCustomer from "../../../../components/bookings/userBooking";
 import UserBooking from "../../../../components/bookings/userBooking";
+import { CURRENCY } from "@/lib/constants";
 
 export default async function CustomerPage({
   params,
@@ -31,7 +32,10 @@ export default async function CustomerPage({
   return (
     <div className="flex flex-col gap-4">
       <div> Customers: {customer?.name}</div>
-      <div> Total Spent: {customer?.totalSpent?.toLocaleString()}</div>
+      <div>
+        Total Spent: {CURRENCY}
+        {Number(customer?.totalSpent)?.toLocaleString()}
+      </div>
       {customer ? (
         <>
           <ProfileStats

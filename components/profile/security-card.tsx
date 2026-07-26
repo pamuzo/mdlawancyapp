@@ -142,12 +142,12 @@ export async function RecentActivities({ user }: Props) {
                   {/* </Button> */}
                 </TableCell>
                 <TableCell className="text-sm font-medium">
-                  {booking.totalPrice.toLocaleString()}
+                  {Number(booking.totalPrice).toLocaleString()}
                 </TableCell>
                 <TableCell
                   className={`text-sm font-medium ${textColor[stockLevel]}`}
                 >
-                  {booking.deposit.toLocaleString()}
+                  {Number(booking.deposit).toLocaleString()}
                 </TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>

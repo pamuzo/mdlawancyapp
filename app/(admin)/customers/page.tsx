@@ -1,12 +1,21 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -17,43 +26,139 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { allCustomers } from "@/lib/actions/customers.action";
-import { MoreHorizontalIcon } from "lucide-react";
+import { MoreHorizontalIcon, X } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 
-export default async function CustomersPage() {
-  const customer = await allCustomers();
+export default function CustomersPage() {
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("ALL");
+  const [customers, setCustomers] = useState<any[]>([]);
 
-  const getTotalSpent = customer.map((totalspent) =>
-    Number(totalspent.totalSpent),
-  );
+  useEffect(() => {
+    async function fetchCustomers() {
+      const customerData = await allCustomers();
+      setCustomers(customerData);
+    }
 
-  const getTotalQuantity = customer.map((totalquantity) =>
-    Number(totalquantity.totalJobs),
-  );
-  const totalQuantityOfAllUser = getTotalQuantity.reduce(
-    (accumulator, current) => accumulator + current,
-    0,
-  );
+    fetchCustomers();
+  }, []);
 
-  const totalSpentOfAllUser = getTotalSpent.reduce(
-    (accumulator, current) => accumulator + current,
-    0,
-  );
+  const filteredCustomers = useMemo(() => {
+    return customers.filter((customer) => {
+      const matchesSearch =
+        customer?.name?.toLowerCase()?.includes(search.toLowerCase()) ||
+        customer.id.toLowerCase().includes(search.toLowerCase());
 
-  const sortedCustomers = [...customer].sort((a, b) => {
-    const reputationA =
-      ((Number(a?.totalSpent) / totalSpentOfAllUser) * 0.7 +
-        (Number(a?.totalJobs) / totalQuantityOfAllUser) * 0.3) *
-      100;
-    const reputationB =
-      ((Number(b?.totalSpent) / totalSpentOfAllUser) * 0.7 +
-        (Number(b?.totalJobs) / totalQuantityOfAllUser) * 0.3) *
-      100;
-    return reputationB - reputationA;
-  });
+      let matchesFilter = true;
+
+      switch (filter) {
+        case "PAID":
+          matchesFilter = customer.balance <= 0;
+          break;
+
+        case "DEBTORS":
+          matchesFilter = customer.totalDebits > 0;
+          break;
+
+        case "VERIFIED":
+          matchesFilter = customer.emailVerified === true;
+          break;
+
+        case "UNVERIFIED":
+          matchesFilter = customer.emailVerified === false;
+          break;
+
+        case "PENDING":
+        case "IN_PROGRESS":
+        case "COMPLETED":
+        case "CANCELLED":
+          matchesFilter = customer.status === filter;
+          break;
+
+        default:
+          matchesFilter = true;
+      }
+
+      return matchesSearch && matchesFilter;
+    });
+  }, [customers, search, filter]);
+
+  const totalSpentOfAllUser =
+    filteredCustomers.reduce(
+      (accumulator, current) => accumulator + Number(current.totalSpent),
+      0,
+    ) || 1;
+
+  const totalQuantityOfAllUser =
+    filteredCustomers.reduce(
+      (accumulator, current) => accumulator + Number(current.totalJobs),
+      0,
+    ) || 1;
+
+  const sortedCustomers = useMemo(() => {
+    return [...filteredCustomers].sort((a, b) => {
+      const reputationA =
+        ((Number(a?.totalSpent) / totalSpentOfAllUser) * 0.7 +
+          (Number(a?.totalJobs) / totalQuantityOfAllUser) * 0.3) *
+        100;
+      const reputationB =
+        ((Number(b?.totalSpent) / totalSpentOfAllUser) * 0.7 +
+          (Number(b?.totalJobs) / totalQuantityOfAllUser) * 0.3) *
+        100;
+      return reputationB - reputationA;
+    });
+  }, [filteredCustomers, totalSpentOfAllUser, totalQuantityOfAllUser]);
 
   return (
-    <div>
+    <div className="space-y-6">
+      <Card>
+        <CardHeader className="flex  justify-between">
+          <CardTitle>Search for Customer</CardTitle>
+          <h2> Total Customers: {customers.length}</h2>
+          <h2> Total Debtors: {customers.filter((c) => c.totalDebits > 0).length}</h2>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4 pt-6 md:flex-row">
+          <div className="relative  w-full max-w-xl">
+            <Input
+              placeholder="Search bookings..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className=" widpr-10"
+            />
+
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                aria-label="Clear search"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+
+          <Select
+            value={filter}
+            onValueChange={(value: string | null) => setFilter(value ?? "ALL")}
+          >
+            <SelectTrigger className="md:w-[200px]">
+              <SelectValue />
+            </SelectTrigger>
+
+            <SelectContent>
+              <SelectItem value="ALL">All Customers</SelectItem>
+              {/* 
+              <SelectItem value="PAID">Paid (Balance = 0)</SelectItem> */}
+              <SelectItem value="DEBTORS">Debtors </SelectItem>
+              <SelectItem value="VERIFIED">Verified </SelectItem>
+              <SelectItem value="UNVERIFIED">Unverified </SelectItem>
+            </SelectContent>
+          </Select>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
           <CardTitle>All Customer</CardTitle>
@@ -77,7 +182,11 @@ export default async function CustomersPage() {
             <TableBody>
               {sortedCustomers.map((customer, index) => (
                 <TableRow key={customer.id ?? index}>
-                  <TableCell>{index + 1}</TableCell>
+                  <TableCell
+                    className={`${customer.totalDebits > 0 && "text-red-600"}`}
+                  >
+                    {index + 1}
+                  </TableCell>
                   <TableCell>
                     <Link href={`/customers/${customer.id}`}>
                       {customer.name}
@@ -98,7 +207,7 @@ export default async function CustomersPage() {
                         (Number(customer?.totalJobs) / totalQuantityOfAllUser) *
                           0.3) *
                       100
-                    ).toFixed(0)}
+                    ).toFixed(2)}
                     %
                   </TableCell>
                   <TableCell className="text-right">
@@ -115,11 +224,6 @@ export default async function CustomersPage() {
                             View Details
                           </Link>
                         </DropdownMenuItem>
-                        {/* <DropdownMenuItem>Duplicate</DropdownMenuItem>
-                        <DropdownMenuSeparator /> */}
-                        {/* <DropdownMenuItem variant="destructive">
-                          Delete
-                        </DropdownMenuItem> */}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>

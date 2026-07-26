@@ -51,7 +51,7 @@ export async function ProfileStats({ user }: Props) {
         <p className="text-sm text-slate-500">CashBack</p>
         <div className="flex justify-between align-baseline">
           <h3 className="mt-2 text-3xl font-bold text-green-500">
-            ₦{user.cashBack.toLocaleString()}
+            ₦{Number(user.cashBack)?.toLocaleString()}
           </h3>
           <Button
             variant={"secondary"}
@@ -101,7 +101,7 @@ export async function ProfileStats({ user }: Props) {
       <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-slate-900">
         <p className="text-sm text-slate-500">Reputation</p>
         <h3 className="mt-2 text-3xl font-bold text-orange-500">
-          {isNaN(reputation) ? "0" : reputation.toFixed(0)}%
+          {isNaN(reputation) ? "0" : reputation.toFixed(1)}%
         </h3>
       </div>
     </div>
