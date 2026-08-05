@@ -45,7 +45,11 @@ import {
   SheetFooter,
 } from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
-import { createDebt, deleteBooking } from "@/lib/actions/booking.action";
+import {
+  cancelBooking,
+  createDebt,
+  deleteBooking,
+} from "@/lib/actions/booking.action";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
@@ -184,6 +188,7 @@ export default function UserBooking({
     formData.append("userId", customer.id);
     formData.append("balance", booking.balance.toString());
     formData.append("totalPrice", booking.totalPrice.toString());
+    formData.append("quantity", booking.quantity.toString());
 
     const result = await deleteBooking(undefined, formData);
 
@@ -193,7 +198,25 @@ export default function UserBooking({
       toast.error("Failed to delete booking");
     }
     router.refresh();
-    console.log(result);
+  };
+
+  const handleCancelBooking = async (booking: customerBookings) => {
+    const formData = new FormData();
+
+    formData.append("bookingId", booking.id);
+    formData.append("userId", customer.id);
+    formData.append("balance", booking.balance.toString());
+    formData.append("totalPrice", booking.totalPrice.toString());
+    formData.append("quantity", booking.quantity.toString());
+
+    const result = await cancelBooking(undefined, formData);
+
+    if (result.success) {
+      toast.success("Booking canceled successfully");
+    } else {
+      toast.error("Failed to cancel booking");
+    }
+    router.refresh();
   };
 
   useEffect(() => {
@@ -344,6 +367,11 @@ export default function UserBooking({
                           <DropdownMenuItem>Completed</DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => handleDeleteBooking(booking)}
+                          >
+                            Delete
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => handleCancelBooking(booking)}
                           >
                             Cancel
                           </DropdownMenuItem>

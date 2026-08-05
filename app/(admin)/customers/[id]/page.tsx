@@ -2,7 +2,6 @@ import { ProfileStats } from "@/components/profile/profile-stats";
 
 import { allCustomers } from "@/lib/actions/customers.action";
 import { getBooking } from "@/lib/actions/booking.action";
-import SearchCustomer from "../../../../components/bookings/userBooking";
 import UserBooking from "../../../../components/bookings/userBooking";
 import { CURRENCY } from "@/lib/constants";
 

@@ -229,7 +229,7 @@ export async function clearAllDebts(prevState: any, formData: FormData) {
 }
 
 // to  cancel a booking
-export async function deleteBooking(prevState: any, formData: FormData) {
+export async function cancelBooking(prevState: any, formData: FormData) {
   try {
     const userId = formData.get("userId") as string;
     const bookingId = formData.get("bookingId") as string;
@@ -250,12 +250,11 @@ export async function deleteBooking(prevState: any, formData: FormData) {
       },
       data: {
         status: "CANCELLED",
-
-        // quantity: 0,
-        // totalPrice: 0,
-        // deposit: 0,
-        // balance: 0,
-        // paymentMethod: "refund",
+        quantity: 0,
+        totalPrice: 0,
+        deposit: 0,
+        balance: 0,
+        paymentMethod: "none",
       },
     });
 
@@ -289,7 +288,59 @@ export async function deleteBooking(prevState: any, formData: FormData) {
   }
 }
 
-// to complete a status
+// to  delete  a booking
+export async function deleteBooking(prevState: any, formData: FormData) {
+  try {
+    const userId = formData.get("userId") as string;
+    const bookingId = formData.get("bookingId") as string;
+    const balance = Number(formData.get("balance"));
+    const totalPrice = Number(formData.get("totalPrice"));
+    const quantity = Number(formData.get("quantity"));
+
+    if (!userId || !bookingId) {
+      return {
+        success: false,
+        message: "Missing required fields",
+      };
+    }
+
+    await prisma.booking.delete({
+      where: {
+        id: bookingId,
+      },
+    });
+
+    await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        totalDebits: {
+          decrement: balance,
+        },
+        totalSpent: {
+          decrement: totalPrice,
+        },
+        totalJobs: {
+          decrement: quantity,
+        },
+      },
+    });
+
+    return {
+      success: true,
+      message: "Booking deleted successfully",
+      timestamp: Date.now(),
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error?.body?.message || error?.message || "something went wrong",
+    };
+  }
+}
+
+// to complete a booking  status
 export async function CompleteStatus(bookingId: string) {
   try {
     await prisma.booking.update({

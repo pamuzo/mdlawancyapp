@@ -17,7 +17,7 @@ export default async function VerifyEmailPage() {
   if (user.emailVerified) redirect("/profile");
 
   return (
-    <main className="flex flex-1 items-center justify-center px-4 py-30 text-center">
+    <main className="flex flex-1 flex-col items-center justify-center px-4 py-30 text-center">
       <div className="space-y-6">
         <div className="space-y-2">
           <h1 className="text-2xl font-semibold">

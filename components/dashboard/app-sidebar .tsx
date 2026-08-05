@@ -13,6 +13,8 @@ import {
   ChevronRight,
   Tags,
   Warehouse,
+  Currency,
+  DollarSign,
 } from "lucide-react";
 
 import {
@@ -60,6 +62,11 @@ const navigation = [
         url: "/add-bookings",
       },
     ],
+  },
+  {
+    title: "Debt cleared",
+    icon: DollarSign,
+    url: "/debt-cleared",
   },
   {
     title: "Products",
@@ -138,7 +145,7 @@ export function AppSidebar({ session }: { session: any }) {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Management</SidebarGroupLabel>
+          {/* <SidebarGroupLabel>Management</SidebarGroupLabel> */}
 
           <SidebarMenu>
             {navigation.map((item) => {

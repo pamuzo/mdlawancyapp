@@ -187,6 +187,7 @@ export default function NewBookingPage() {
                     </SelectItem>
                     <SelectItem value="TRANING">Traning</SelectItem>
                     <SelectItem value="GRAPHICS">Graphics</SelectItem>
+                    <SelectItem value="OTHERs">Other</SelectItem>
                   </SelectContent>
                 </Select>
                 <input type="hidden" required name="jobType" value={jobType} />
