@@ -16,7 +16,7 @@ import {
 
 interface DebtRecord {
   id: string;
-  amount: number | string;
+  amount: number;
   createdAt: string;
   user?: {
     name: string;
