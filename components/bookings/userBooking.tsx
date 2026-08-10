@@ -76,14 +76,15 @@ type customer = {
   name: string;
 };
 
-type Debt = {
-  id: string;
-  bookingId: string;
-  customerId: string;
-  amount: number;
-  status: string;
-  createdAt: string;
-};
+// type Debt = {
+//   id: string;
+//   bookingId: string;
+//   customerId: string;
+//   amount: number;
+//   status: string;
+//   createdAt: string;
+
+// };
 
 const ITEMS_PER_PAGE = 15;
 export default function UserBooking({
@@ -93,7 +94,7 @@ export default function UserBooking({
 }: {
   customerBookings: customerBookings[];
   customer: customer;
-  customerDebts: Debt[];
+  customerDebts: any[];
 }) {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("ALL");
