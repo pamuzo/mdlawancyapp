@@ -14,7 +14,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export default function Debt({ debts }: { debts: any[] }) {
+interface DebtRecord {
+  id: string;
+  amount: number | string;
+  createdAt: string;
+  user?: {
+    name: string;
+  };
+}
+
+export default function Debt({ debts }: { debts: DebtRecord[] }) {
   return (
     <Card className="w-full">
       <CardHeader>
