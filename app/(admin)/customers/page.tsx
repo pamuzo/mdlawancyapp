@@ -34,6 +34,7 @@ export default function CustomersPage() {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("ALL");
   const [customers, setCustomers] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     async function fetchCustomers() {
@@ -43,6 +44,10 @@ export default function CustomersPage() {
 
     fetchCustomers();
   }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, filter, customers.length]);
 
   const filteredCustomers = useMemo(() => {
     return customers.filter((customer) => {
@@ -110,18 +115,26 @@ export default function CustomersPage() {
     });
   }, [filteredCustomers, totalSpentOfAllUser, totalQuantityOfAllUser]);
 
+  const totalPages = Math.max(1, Math.ceil(sortedCustomers.length / 15));
+  const paginatedCustomers = useMemo(() => {
+    const start = (currentPage - 1) * 15;
+    return sortedCustomers.slice(start, start + 15);
+  }, [sortedCustomers, currentPage]);
+
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader className="flex  justify-between">
           <CardTitle>Search for Customer</CardTitle>
           <h2> Total Customers: {customers.length}</h2>
-          <h2> Total Debtors: {customers.filter((c) => c.totalDebits > 0).length}</h2>
+          <h2>
+            Total Debtors: {customers.filter((c) => c.totalDebits > 0).length}
+          </h2>
         </CardHeader>
         <CardContent className="flex flex-col gap-4 pt-6 md:flex-row">
           <div className="relative  w-full max-w-xl">
             <Input
-              placeholder="Search bookings..."
+              placeholder="Search Customers..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className=" widpr-10"
@@ -165,7 +178,6 @@ export default function CustomersPage() {
         </CardHeader>
         <CardContent>
           <Table>
-            <TableCaption>All Customers</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead className="w-5">SN</TableHead>
@@ -180,12 +192,12 @@ export default function CustomersPage() {
             </TableHeader>
 
             <TableBody>
-              {sortedCustomers.map((customer, index) => (
+              {paginatedCustomers.map((customer, index) => (
                 <TableRow key={customer.id ?? index}>
                   <TableCell
                     className={`${customer.totalDebits > 0 && "text-red-600"}`}
                   >
-                    {index + 1}
+                    {(currentPage - 1) * 15 + index + 1}
                   </TableCell>
                   <TableCell>
                     <Link href={`/customers/${customer.id}`}>
@@ -231,6 +243,38 @@ export default function CustomersPage() {
               ))}
             </TableBody>
           </Table>
+
+          <div className="mt-4 flex flex-col gap-3 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm text-muted-foreground">
+              Showing {(currentPage - 1) * 15 + 1}-
+              {Math.min(currentPage * 15, sortedCustomers.length)} of{" "}
+              {sortedCustomers.length} customers
+            </p>
+
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </Button>
+              <span className="text-sm text-muted-foreground">
+                Page {currentPage} of {totalPages}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  setCurrentPage((page) => Math.min(totalPages, page + 1))
+                }
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </Button>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>

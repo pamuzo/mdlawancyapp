@@ -25,7 +25,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, X } from "lucide-react";
 import {
   Pagination,
   PaginationContent,
@@ -35,7 +35,11 @@ import {
   PaginationPrevious,
   PaginationEllipsis,
 } from "@/components/ui/pagination";
-import { CompleteStatus, deleteBooking } from "@/lib/actions/booking.action";
+import {
+  cancelBooking,
+  CompleteStatus,
+  deleteBooking,
+} from "@/lib/actions/booking.action";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -58,24 +62,47 @@ type Booking = {
   };
 };
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 15;
 export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("ALL");
-
+  const [filter, setFilter] = useState("ALL");
   const [currentPage, setCurrentPage] = useState(1);
 
+  const router = useRouter();
+  // filter bookings based on search and status
   const filteredBookings = useMemo(() => {
     return bookings.filter((booking: any) => {
       const matchesSearch =
         booking.jobType.toLowerCase().includes(search.toLowerCase()) ||
-        booking.id.toLowerCase().includes(search.toLowerCase());
+        booking.id.toLowerCase().includes(search.toLowerCase()) ||
+        booking.user?.name.toLowerCase().includes(search.toLowerCase());
 
-      const matchesStatus = status === "ALL" || booking.status === status;
+      let matchesFilter = true;
 
-      return matchesSearch && matchesStatus;
+      switch (filter) {
+        case "PAID":
+          matchesFilter = booking.balance <= 0;
+          break;
+
+        case "OUTSTANDING":
+          matchesFilter = booking.balance > 0;
+          break;
+
+        case "PENDING":
+        case "IN_PROGRESS":
+        case "COMPLETED":
+        case "CANCELLED":
+          matchesFilter = booking.status === filter;
+          break;
+
+        default:
+          matchesFilter = true;
+      }
+
+      return matchesSearch && matchesFilter;
     });
-  }, [bookings, search, status]);
+  }, [bookings, search, filter]);
 
   const totalPages = Math.ceil(filteredBookings.length / ITEMS_PER_PAGE);
 
@@ -83,7 +110,6 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE,
   );
-  const router = useRouter();
 
   // to delete a booking
   const handleDeleteBooking = async (booking: Booking) => {
@@ -106,6 +132,27 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
     console.log(result);
   };
 
+  // handle cancel booking
+  const handleCancelBooking = async (booking: Booking) => {
+    const formData = new FormData();
+
+    formData.append("bookingId", booking.id);
+    formData.append("userId", booking.userId);
+    formData.append("balance", booking.balance.toString());
+    formData.append("totalPrice", booking.totalPrice.toString());
+    formData.append("quantity", booking.quantity.toString());
+
+    const result = await cancelBooking(undefined, formData);
+
+    if (result.success) {
+      toast.success("Booking canceled successfully");
+    } else {
+      toast.error("Failed to cancel booking");
+    }
+    router.refresh();
+  };
+
+  // get page numbers for pagination
   const getPageNumbers = () => {
     const delta = 1; // how many pages around current
 
@@ -143,13 +190,24 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
           <CardTitle>Search bookings</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4 pt-6 md:flex-row">
-          <Input
-            placeholder="Search bookings..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="md:max-w-sm"
-          />
-
+          <div className="relative  w-full max-w-xl">
+            <Input
+              placeholder="Search bookings..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className=" widpr-10"
+            />
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                aria-label="Clear search"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
           <Select
             value={status}
             onValueChange={(value) => setStatus(value ?? "ALL")}
@@ -164,6 +222,9 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
               <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
               <SelectItem value="COMPLETED">Completed</SelectItem>
               <SelectItem value="CANCELLED">Cancelled</SelectItem>
+              {/* Balance filters */}
+              <SelectItem value="PAID">Paid (Balance = 0)</SelectItem>
+              <SelectItem value="OUTSTANDING">Outstanding Balance</SelectItem>
             </SelectContent>
           </Select>
         </CardContent>
@@ -277,9 +338,21 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
                                 ? "hidden"
                                 : ""
                             }
-                            onClick={() => handleDeleteBooking(booking)}
+                            onClick={() => handleCancelBooking(booking)}
                           >
                             Cancel
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className={
+                              ["CANCELLED", "COMPLETED"].includes(
+                                booking.status,
+                              )
+                                ? "hidden"
+                                : ""
+                            }
+                            onClick={() => handleDeleteBooking(booking)}
+                          >
+                            Delete
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>

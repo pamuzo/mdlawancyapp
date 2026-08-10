@@ -4,6 +4,7 @@ import { allCustomers } from "@/lib/actions/customers.action";
 import { getBooking } from "@/lib/actions/booking.action";
 import UserBooking from "../../../../components/bookings/userBooking";
 import { CURRENCY } from "@/lib/constants";
+import { getDebtCleared } from "@/lib/actions/debt.actions";
 
 export default async function CustomerPage({
   params,
@@ -27,6 +28,8 @@ export default async function CustomerPage({
     }));
 
   const customer = customers.find((customer) => customer?.id === id);
+  const debts = await getDebtCleared();
+  const customerDebts = debts.filter((debt) => debt.userId === id);
 
   return (
     <div className="flex flex-col gap-4">
@@ -51,6 +54,7 @@ export default async function CustomerPage({
           <UserBooking
             customer={customer}
             customerBookings={customerBookings}
+            customerDebts={customerDebts}
           />
         </>
       ) : null}

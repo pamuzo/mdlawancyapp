@@ -24,7 +24,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, X } from "lucide-react";
 import {
   Pagination,
   PaginationContent,
@@ -47,12 +47,15 @@ import {
 import { Label } from "@/components/ui/label";
 import {
   cancelBooking,
+  CompleteStatus,
   createDebt,
   deleteBooking,
 } from "@/lib/actions/booking.action";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
+import Debt from "./debt";
+import { getDebtCleared } from "@/lib/actions/debt.actions";
 
 type customerBookings = {
   id: string;
@@ -73,22 +76,22 @@ type customer = {
   name: string;
 };
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 15;
 export default function UserBooking({
   customerBookings,
   customer,
+  customerDebts,
 }: {
   customerBookings: customerBookings[];
   customer: customer;
+  customerDebts: any[];
 }) {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("ALL");
-
   const [paymentMethod, setPaymentMethod] = useState("");
   const [amount, setAmount] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [sheetOpen, setSheetOpen] = useState(false);
-  const [alertOpen, setAlertOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] =
     useState<customerBookings | null>(null);
 
@@ -118,6 +121,7 @@ export default function UserBooking({
     }
   }, [state, router]);
 
+  // filter bookings based on search and status
   const filteredBookings = useMemo(() => {
     return customerBookings.filter((booking) => {
       const matchesSearch =
@@ -157,6 +161,7 @@ export default function UserBooking({
     currentPage * ITEMS_PER_PAGE,
   );
 
+  //
   const getPageNumbers = () => {
     const delta = 1; // how many pages around current
 
@@ -181,6 +186,7 @@ export default function UserBooking({
     return range;
   };
 
+  // handle delete booking
   const handleDeleteBooking = async (booking: customerBookings) => {
     const formData = new FormData();
 
@@ -200,6 +206,7 @@ export default function UserBooking({
     router.refresh();
   };
 
+  // handle cancel booking
   const handleCancelBooking = async (booking: customerBookings) => {
     const formData = new FormData();
 
@@ -219,6 +226,7 @@ export default function UserBooking({
     router.refresh();
   };
 
+  // reset current page to 1 when search or filter changes
   useEffect(() => {
     setCurrentPage(1);
   }, [search, filter]);
@@ -237,13 +245,24 @@ export default function UserBooking({
           <CardTitle>Search {customer.name} booking</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4 pt-6 md:flex-row">
-          <Input
-            placeholder="Search bookings..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="md:max-w-sm"
-          />
-
+          <div className="relative  w-full max-w-xl">
+            <Input
+              placeholder="Search bookings..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className=" widpr-10"
+            />
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                aria-label="Clear search"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
           <Select
             value={filter}
             onValueChange={(value: string | null) => setFilter(value ?? "ALL")}
@@ -364,16 +383,41 @@ export default function UserBooking({
                               Clear Debt
                             </DropdownMenuItem>
                           )}
-                          <DropdownMenuItem>Completed</DropdownMenuItem>
                           <DropdownMenuItem
-                            onClick={() => handleDeleteBooking(booking)}
+                            className={
+                              ["CANCELLED", "COMPLETED"].includes(
+                                booking.status,
+                              )
+                                ? "hidden"
+                                : ""
+                            }
+                            onClick={() => CompleteStatus(booking.id)}
                           >
-                            Delete
+                            Completed
                           </DropdownMenuItem>
                           <DropdownMenuItem
+                            className={
+                              ["CANCELLED", "COMPLETED"].includes(
+                                booking.status,
+                              )
+                                ? "hidden"
+                                : ""
+                            }
                             onClick={() => handleCancelBooking(booking)}
                           >
                             Cancel
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className={
+                              ["CANCELLED", "COMPLETED"].includes(
+                                booking.status,
+                              )
+                                ? "hidden"
+                                : ""
+                            }
+                            onClick={() => handleDeleteBooking(booking)}
+                          >
+                            Delete
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -581,6 +625,8 @@ export default function UserBooking({
           </SheetContent>
         </Sheet>
       </Card>
+
+      <Debt debts={customerDebts} />
     </div>
   );
 }
