@@ -463,7 +463,7 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
                         {/* Actions */}
                         <TableCell className="text-right">
                           <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
+                            <DropdownMenuTrigger>
                               <button
                                 type="button"
                                 className="inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
@@ -476,7 +476,7 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
 
                             <DropdownMenuContent align="end" className="w-44">
                               {/* View */}
-                              <DropdownMenuItem asChild>
+                              <DropdownMenuItem>
                                 <Link
                                   href={`/bookings/${booking.id}`}
                                   className="w-full cursor-pointer"
@@ -487,7 +487,7 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
 
                               {/* Edit */}
                               {!isClosed && (
-                                <DropdownMenuItem asChild>
+                                <DropdownMenuItem>
                                   <Link
                                     href={`/bookings/${booking.id}/edit`}
                                     className="w-full cursor-pointer"
