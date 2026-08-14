@@ -250,7 +250,6 @@ export default function NewBookingPage() {
                 <Input
                   id="quantity"
                   name="quantity"
-                  type="number"
                   value={quantity}
                   onChange={(e) => setQuantity(Number(e.target.value))}
                   placeholder="Quantity"
@@ -263,7 +262,6 @@ export default function NewBookingPage() {
                 <Input
                   id="cost"
                   name="cost"
-                  type="number"
                   value={cost}
                   onChange={(e) => setCost(e.target.value)}
                   placeholder="Cost"
@@ -276,7 +274,6 @@ export default function NewBookingPage() {
                 <Input
                   id="deposit"
                   name="deposit"
-                  type="number"
                   value={deposit}
                   onChange={(e) => setDeposit(e.target.value)}
                   placeholder="Deposit"

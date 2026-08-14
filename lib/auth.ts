@@ -13,28 +13,61 @@ export const auth = betterAuth({
     provider: "postgresql",
   }),
 
+  // emailAndPassword: {
+  //   enabled: true,
+
+  //   // TODO: Implement password reset
+  //   async sendResetPassword({ user, url }) {
+  //     await SendEmail({
+  //       to: user.email,
+  //       subject: "Reset your password for MD LAWANCY LIMITED",
+  //       text: `You can reset your password by clicking the following link: ${url}`,
+  //     });
+  //   },
+  // },
+
   emailAndPassword: {
     enabled: true,
 
-    // TODO: Implement password reset
     async sendResetPassword({ user, url }) {
       await SendEmail({
         to: user.email,
-        subject: "Reset your password for MD LAWANCY LIMITED",
+        subject: "Reset your password — MD LAWANCY LIMITED",
         text: `You can reset your password by clicking the following link: ${url}`,
+        type: "reset-password",
+        user,
+        url,
       });
     },
   },
 
   // TODO: Implement email verification
+  // emailVerification: {
+  //   sendOnSignUp: true,
+  //   autoSignInAfterVerification: true,
+  //   async sendVerificationEmail({ user, url }) {
+  //     await SendEmail({
+  //       to: user.email,
+  //       subject: "Verify your email for MD LAWANCY LIMITED",
+  //       text: `Please verify your email by clicking the following link: ${url}`,
+  //     });
+  //   },
+  // },
+
   emailVerification: {
     sendOnSignUp: true,
+
+    // User can sign in without verifying email
     autoSignInAfterVerification: true,
+
     async sendVerificationEmail({ user, url }) {
       await SendEmail({
         to: user.email,
-        subject: "Verify your email for MD LAWANCY LIMITED",
+        subject: "Verify your email — MD LAWANCY LIMITED",
         text: `Please verify your email by clicking the following link: ${url}`,
+        type: "verification",
+        user,
+        url,
       });
     },
   },
