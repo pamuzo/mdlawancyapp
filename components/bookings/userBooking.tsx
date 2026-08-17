@@ -24,7 +24,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { MoreHorizontal, X } from "lucide-react";
+import { MoreHorizontal, X, Loader2 } from "lucide-react";
 import {
   Pagination,
   PaginationContent,
@@ -56,6 +56,7 @@ import { toast } from "sonner";
 import Link from "next/link";
 import Debt from "./debt";
 import { getDebtCleared } from "@/lib/actions/debt.actions";
+import { formatDate } from "@/lib/utils";
 
 type customerBookings = {
   id: string;
@@ -76,16 +77,6 @@ type customer = {
   name: string;
 };
 
-// type Debt = {
-//   id: string;
-//   bookingId: string;
-//   customerId: string;
-//   amount: number;
-//   status: string;
-//   createdAt: string;
-
-// };
-
 const ITEMS_PER_PAGE = 15;
 export default function UserBooking({
   customerBookings,
@@ -104,6 +95,9 @@ export default function UserBooking({
   const [sheetOpen, setSheetOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] =
     useState<customerBookings | null>(null);
+  const [completingBookingId, setCompletingBookingId] = useState<string | null>(
+    null,
+  );
 
   const [state, formAction, pending] = useActionState(createDebt, {
     success: false,
@@ -194,6 +188,26 @@ export default function UserBooking({
     }
 
     return range;
+  };
+
+  const handleCompleteBooking = async (bookingId: string) => {
+    setCompletingBookingId(bookingId);
+
+    try {
+      const result = await CompleteStatus(bookingId);
+
+      if (result?.success) {
+        toast.success("Booking completed successfully");
+        router.refresh();
+      } else {
+        toast.error(result?.message || "Failed to complete booking");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong");
+    } finally {
+      setCompletingBookingId(null);
+    }
   };
 
   // handle delete booking
@@ -341,7 +355,14 @@ export default function UserBooking({
                     </TableCell>
 
                     <TableCell>
-                      <StatusBadge status={booking.status} />
+                      {completingBookingId === booking.id ? (
+                        <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                          <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                          Processing...
+                        </Badge>
+                      ) : (
+                        <StatusBadge status={booking.status} />
+                      )}
                     </TableCell>
 
                     <TableCell>{booking.quantity}</TableCell>
@@ -358,9 +379,7 @@ export default function UserBooking({
                       ₦{booking.balance.toLocaleString()}
                     </TableCell>
 
-                    <TableCell>
-                      {new Date(booking.createdAt).toLocaleDateString()}
-                    </TableCell>
+                    <TableCell>{formatDate(booking.createdAt)}</TableCell>
                     <TableCell>{booking.paymentMethod}</TableCell>
 
                     <TableCell
@@ -401,7 +420,8 @@ export default function UserBooking({
                                 ? "hidden"
                                 : ""
                             }
-                            onClick={() => CompleteStatus(booking.id)}
+                            disabled={completingBookingId === booking.id}
+                            onClick={() => handleCompleteBooking(booking.id)}
                           >
                             Completed
                           </DropdownMenuItem>

@@ -3,8 +3,17 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { MoreHorizontal, X } from "lucide-react";
+import {
+  ChartNoAxesCombined,
+  CircleDollarSignIcon,
+  GoalIcon,
+  Loader2,
+  MoreHorizontal,
+  NotebookPen,
+  X,
+} from "lucide-react";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -45,6 +54,8 @@ import {
   CompleteStatus,
   deleteBooking,
 } from "@/lib/actions/booking.action";
+import StatCard from "@/components/stateCard";
+import AddBookingDialog from "@/components/admin/addBookingDialogBox";
 
 type Booking = {
   id: string;
@@ -83,7 +94,9 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
   const [filter, setFilter] = useState<FilterType>("ALL");
   const [currentPage, setCurrentPage] = useState(1);
   const [processingId, setProcessingId] = useState<string | null>(null);
-
+  const [completingBookingId, setCompletingBookingId] = useState<string | null>(
+    null,
+  );
   /**
    * Filter bookings by search term and selected filter.
    */
@@ -135,6 +148,26 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
 
     return filteredBookings.slice(startIndex, endIndex);
   }, [filteredBookings, currentPage]);
+
+  const handleCompleteBooking = async (bookingId: string) => {
+    setCompletingBookingId(bookingId);
+
+    try {
+      const result = await CompleteStatus(bookingId);
+
+      if (result?.success) {
+        toast.success("Booking completed successfully");
+        router.refresh();
+      } else {
+        toast.error(result?.message || "Failed to complete booking");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong");
+    } finally {
+      setCompletingBookingId(null);
+    }
+  };
 
   /**
    * Reset pagination whenever the search/filter changes.
@@ -230,40 +263,40 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
   /**
    * Mark booking as completed.
    */
-  const handleCompleteBooking = async (booking: Booking) => {
-    if (processingId) return;
+  // const handleCompleteBooking = async (booking: Booking) => {
+  //   if (processingId) return;
 
-    try {
-      setProcessingId(booking.id);
+  //   try {
+  //     setProcessingId(booking.id);
 
-      const result = await CompleteStatus(booking.id);
+  //     const result = await CompleteStatus(booking.id);
 
-      // Supports actions that return an object as well as
-      // actions that simply complete without returning one.
-      if (
-        result &&
-        typeof result === "object" &&
-        "success" in result &&
-        !result.success
-      ) {
-        const message =
-          "message" in result && typeof result.message === "string"
-            ? result.message
-            : "Failed to complete booking";
+  //     // Supports actions that return an object as well as
+  //     // actions that simply complete without returning one.
+  //     if (
+  //       result &&
+  //       typeof result === "object" &&
+  //       "success" in result &&
+  //       !result.success
+  //     ) {
+  //       const message =
+  //         "message" in result && typeof result.message === "string"
+  //           ? result.message
+  //           : "Failed to complete booking";
 
-        toast.error(message);
-        return;
-      }
+  //       toast.error(message);
+  //       return;
+  //     }
 
-      toast.success("Booking marked as completed");
-      router.refresh();
-    } catch (error) {
-      console.error("Complete booking error:", error);
-      toast.error("Something went wrong while completing the booking");
-    } finally {
-      setProcessingId(null);
-    }
-  };
+  //     toast.success("Booking marked as completed");
+  //     router.refresh();
+  //   } catch (error) {
+  //     console.error("Complete booking error:", error);
+  //     toast.error("Something went wrong while completing the booking");
+  //   } finally {
+  //     setProcessingId(null);
+  //   }
+  // };
 
   /**
    * Generate pagination numbers.
@@ -297,74 +330,131 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
   const goToPage = (page: number) => {
     setCurrentPage(Math.max(1, Math.min(totalPages, page)));
   };
+  const totalRevenue = filteredBookings.reduce(
+    (sum, booking) => sum + booking.totalPrice,
+    0,
+  );
+
+  const pendingBookings = filteredBookings.filter(
+    (b) => b.status === "PENDING",
+  ).length;
+
+  const completedBookings = filteredBookings.filter(
+    (b) => b.status === "COMPLETED",
+  ).length;
 
   return (
     <div className="space-y-6">
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-7 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+      >
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+            Bookings
+          </h1>
+
+          <p className="mt-1 text-sm text-muted-foreground">
+            Track bookings, payments, customers and outstanding balances.
+          </p>
+        </div>
+        <AddBookingDialog />
+
+        {/* <Link href={"/add-bookings"}>
+          <h1 className="text-2xl font-bold">+ New Booking</h1>
+        </Link> */}
+        {/* <CreatePurchaseDialog /> */}
+      </motion.div>
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard
+          title="Total bookings"
+          value={`${filteredBookings.length.toLocaleString()}`}
+          icon={NotebookPen}
+          description="Total bookings"
+          color="bg-primary/10 text-green-600"
+        />
+
+        <StatCard
+          title="Total Revenue"
+          value={`₦${totalRevenue.toLocaleString()}`}
+          icon={CircleDollarSignIcon}
+          description="Total revenue"
+          color="bg-primary/10 text-primary"
+        />
+
+        <StatCard
+          title="Total Pending"
+          value={`${pendingBookings.toLocaleString()}`}
+          icon={ChartNoAxesCombined}
+          description="Total pending bookings"
+          color="bg-primary/10 text-orange-600"
+        />
+        <StatCard
+          title="Total Completed"
+          value={`${completedBookings.toLocaleString()}`}
+          icon={GoalIcon}
+          description="Total completed bookings"
+          color="bg-violet-500/10 text-violet-600"
+        />
+      </div>
       {/* Search and Filters */}
+
       <Card>
-        <CardHeader>
-          <CardTitle>Search Bookings</CardTitle>
-        </CardHeader>
+        <CardHeader className="border-b bg-background/70 px-4 py-4 sm:px-6">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <CardTitle className="text-lg">Recent Bookkings</CardTitle>
 
-        <CardContent className="flex flex-col gap-4 pt-6 md:flex-row">
-          <div className="relative w-full max-w-xl">
-            <Input
-              placeholder="Search by job type, booking ID, customer, email or phone..."
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              className="pr-10"
-            />
+              <p className="mt-1 text-sm text-muted-foreground">
+                {filteredBookings.length} booking
+                {filteredBookings.length !== 1 ? "s" : ""} found
+              </p>
+            </div>
 
-            {search && (
-              <button
-                type="button"
-                onClick={() => setSearch("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
-                aria-label="Clear search"
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <div className="relative w-full max-w-xl">
+                <Input
+                  placeholder="Search by job type, booking ID, customer, email or phone..."
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  className="pr-10"
+                />
+
+                {search && (
+                  <button
+                    type="button"
+                    onClick={() => setSearch("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                    aria-label="Clear search"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+
+              <Select
+                value={filter}
+                onValueChange={(value) => setFilter(value as FilterType)}
               >
-                <X className="h-4 w-4" />
-              </button>
-            )}
+                <SelectTrigger className="w-full md:w-[220px]">
+                  <SelectValue placeholder="Filter bookings" />
+                </SelectTrigger>
+
+                <SelectContent>
+                  <SelectItem value="ALL">All Bookings</SelectItem>
+                  <SelectItem value="PENDING">Pending</SelectItem>
+                  <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
+                  <SelectItem value="COMPLETED">Completed</SelectItem>
+                  <SelectItem value="CANCELLED">Cancelled</SelectItem>
+                  <SelectItem value="PAID">Paid (Balance = ₦0)</SelectItem>
+                  <SelectItem value="OUTSTANDING">
+                    Outstanding Balance
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
-
-          <Select
-            value={filter}
-            onValueChange={(value) => setFilter(value as FilterType)}
-          >
-            <SelectTrigger className="w-full md:w-[220px]">
-              <SelectValue placeholder="Filter bookings" />
-            </SelectTrigger>
-
-            <SelectContent>
-              <SelectItem value="ALL">All Bookings</SelectItem>
-
-              <SelectItem value="PENDING">Pending</SelectItem>
-
-              <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
-
-              <SelectItem value="COMPLETED">Completed</SelectItem>
-
-              <SelectItem value="CANCELLED">Cancelled</SelectItem>
-
-              <SelectItem value="PAID">Paid (Balance = ₦0)</SelectItem>
-
-              <SelectItem value="OUTSTANDING">Outstanding Balance</SelectItem>
-            </SelectContent>
-          </Select>
-        </CardContent>
-      </Card>
-
-      {/* Bookings Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            All Bookings
-            {filteredBookings.length > 0 && (
-              <span className="ml-2 text-sm font-normal text-muted-foreground">
-                ({filteredBookings.length})
-              </span>
-            )}
-          </CardTitle>
         </CardHeader>
 
         <CardContent>
@@ -428,7 +518,14 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
 
                         {/* Status */}
                         <TableCell>
-                          <StatusBadge status={booking.status} />
+                          {completingBookingId === booking.id ? (
+                            <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                              <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                              Processing...
+                            </Badge>
+                          ) : (
+                            <StatusBadge status={booking.status} />
+                          )}
                         </TableCell>
 
                         {/* Quantity */}
@@ -498,19 +595,22 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
                               )}
 
                               {/* Complete */}
-                              {!isClosed && (
-                                <DropdownMenuItem
-                                  disabled={isProcessing}
-                                  onSelect={(event) => {
-                                    event.preventDefault();
-                                    void handleCompleteBooking(booking);
-                                  }}
-                                >
-                                  {isProcessing
-                                    ? "Processing..."
-                                    : "Mark Completed"}
-                                </DropdownMenuItem>
-                              )}
+
+                              <DropdownMenuItem
+                                className={
+                                  ["CANCELLED", "COMPLETED"].includes(
+                                    booking.status,
+                                  )
+                                    ? "hidden"
+                                    : ""
+                                }
+                                disabled={completingBookingId === booking.id}
+                                onClick={() =>
+                                  handleCompleteBooking(booking.id)
+                                }
+                              >
+                                Mark Completed
+                              </DropdownMenuItem>
 
                               {/* Cancel */}
                               {!isClosed && (

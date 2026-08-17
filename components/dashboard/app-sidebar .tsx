@@ -15,6 +15,7 @@ import {
   Warehouse,
   Currency,
   DollarSign,
+  NotepadText,
 } from "lucide-react";
 
 import {
@@ -28,7 +29,6 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -38,7 +38,6 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { APP_NAME } from "@/lib/constants";
-import { AnyARecord } from "dns";
 import { Button } from "../ui/button";
 import { FiLogOut } from "react-icons/fi";
 import { signOutUser } from "@/lib/actions/user.action";
@@ -51,7 +50,7 @@ const navigation = [
   },
   {
     title: "Bookings",
-    icon: LayoutDashboard,
+    icon: NotepadText,
     items: [
       {
         title: "Bookings",
@@ -67,6 +66,11 @@ const navigation = [
     title: "Debt cleared",
     icon: DollarSign,
     url: "/debt-cleared",
+  },
+  {
+    title: "Purchases",
+    icon: Currency,
+    url: "/purchase",
   },
   {
     title: "Products",
