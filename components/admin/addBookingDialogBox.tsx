@@ -60,13 +60,28 @@ function SubmitButton({ customer }: { customer: Customer | null }) {
 }
 
 export default function AddBookingDialog() {
-  const initialState = {
+  type BookingActionState = {
+    success: boolean;
+    message: string;
+    timestamp: string;
+  };
+
+  const initialState: BookingActionState = {
     success: false,
     message: "",
     timestamp: new Date().toISOString(),
   };
 
-  const [data, action] = useActionState(createBooking, initialState);
+  const [data, action] = useActionState(
+    async (prevState: BookingActionState, formData: FormData) => {
+      const result = await createBooking(prevState, formData);
+      return {
+        ...result,
+        timestamp: new Date().toISOString(),
+      } as BookingActionState;
+    },
+    initialState,
+  );
   const formRef = useRef<HTMLFormElement>(null);
   const [customer, setCustomer] = useState<Customer | null>(null);
 
