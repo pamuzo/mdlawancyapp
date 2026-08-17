@@ -165,13 +165,15 @@ export default function AddBookingDialog() {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="min-h-0 flex-1 overflow-y-auto px-6 py-4">
+        <div className="min-h-0 flex-1 overflow-y-auto  py-4">
           <CardContent>
             <Card className="bg-muted/50">
               <CardContent className="pt-6">
                 <div className="grid gap-4 md:grid-cols-2">
                   <div>
-                    <Label>Select Customer</Label>
+                    <Label className="text-sm font-medium">
+                      Select Customer
+                    </Label>
                     <UserAutocomplete
                       value={customer?.id}
                       onSelect={setCustomer}
@@ -179,7 +181,7 @@ export default function AddBookingDialog() {
                   </div>
 
                   <div>
-                    <Label>Phone Number</Label>
+                    <Label className="text-sm font-medium">Phone Number</Label>
 
                     <Input value={customer?.phoneNumber ?? ""} readOnly />
                   </div>
@@ -203,7 +205,7 @@ export default function AddBookingDialog() {
             <form ref={formRef} action={action} className="space-y-6 pt-5">
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
-                  <Label>Job Type</Label>
+                  <Label className="text-sm font-medium">Job Type</Label>
 
                   <Select
                     value={jobType}
@@ -249,7 +251,7 @@ export default function AddBookingDialog() {
                 </div>
 
                 <div>
-                  <Label>Payment Method</Label>
+                  <Label className="text-sm font-medium">Payment Method</Label>
 
                   <Select
                     value={paymentMethod}
@@ -280,7 +282,9 @@ export default function AddBookingDialog() {
               </div>
 
               <div>
-                <Label htmlFor="name">Job Details </Label>
+                <Label className="text-sm font-medium" htmlFor="name">
+                  Job Details
+                </Label>
                 <Textarea
                   id="jobDetails"
                   name="jobDetails"
@@ -295,7 +299,7 @@ export default function AddBookingDialog() {
 
               <div className="grid gap-4 md:grid-cols-3">
                 <div>
-                  <Label>Quantity</Label>
+                  <Label className="text-sm font-medium">Quantity</Label>
                   <Input
                     id="quantity"
                     name="quantity"
@@ -310,7 +314,7 @@ export default function AddBookingDialog() {
                 </div>
 
                 <div>
-                  <Label>Cost (₦)</Label>
+                  <Label className="text-sm font-medium">Cost (₦)</Label>
                   <Input
                     id="cost"
                     name="cost"
@@ -325,7 +329,9 @@ export default function AddBookingDialog() {
                 </div>
 
                 <div>
-                  <Label>Deposit Paid (₦)</Label>
+                  <Label className="text-sm font-medium">
+                    Deposit Paid (₦)
+                  </Label>
                   <Input
                     id="deposit"
                     name="deposit"
@@ -341,7 +347,7 @@ export default function AddBookingDialog() {
               </div>
 
               <div>
-                <Label>Delivery Date</Label>
+                <Label className="text-sm font-medium">Delivery Date</Label>
                 <Input
                   id="deliveryDate"
                   name="deliveryDate"

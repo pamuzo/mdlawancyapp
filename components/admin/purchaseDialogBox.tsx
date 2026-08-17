@@ -67,7 +67,7 @@ export default function CreatePurchaseDialog() {
           <div className="space-y-2">
             <label className="text-sm font-medium">Item name</label>
 
-            <Input name="itemName" placeholder="e.g. MacBook Pro M4" required />
+            <Input name="itemName" placeholder="flock" required />
 
             {state.errors?.itemName && (
               <p className="text-xs text-destructive">
