@@ -260,8 +260,10 @@ export default function PurchasesClientPage({ purchases }: Props) {
                     <Select
                       value={paymentFilter}
                       onValueChange={(value) => {
-                        setPaymentFilter(value);
-                        setCurrentPage(1);
+                        if (value) {
+                          setPaymentFilter(value);
+                          setCurrentPage(1);
+                        }
                       }}
                     >
                       <SelectTrigger className="w-full sm:w-[160px]">
