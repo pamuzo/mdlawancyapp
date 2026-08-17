@@ -8,6 +8,7 @@ export default async function PurchasesPage() {
     deposit: Number(purchase.deposit),
     balance: Number(purchase.balance),
     totalPrice: Number(purchase.totalPrice),
+    createdAt: String(purchase.createdAt),
   }));
 
   return <PurchasePageClient purchases={purchases} />;
