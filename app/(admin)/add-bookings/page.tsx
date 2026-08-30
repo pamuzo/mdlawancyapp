@@ -58,6 +58,7 @@ export default function NewBookingPage() {
   const [data, action] = useActionState(createBooking, {
     success: false,
     message: "",
+    timestamp: "",
   });
   const formRef = useRef<HTMLFormElement>(null);
   const [customer, setCustomer] = useState<Customer | null>(null);
