@@ -3,8 +3,17 @@
 import { prisma } from "@/db/prisma";
 import { covertToPlainObject } from "../utils";
 
+export type BookingActionState = {
+  success: boolean;
+  message: string;
+  timestamp: string;
+};
+
 // create a new booking
-export async function createBooking(prevState: any, formData: FormData) {
+export async function createBooking(
+  _previousState: BookingActionState,
+  formData: FormData,
+): Promise<BookingActionState> {
   try {
     const userId = formData.get("userId") as string;
     const jobType = formData.get("jobType") as string;
@@ -33,6 +42,7 @@ export async function createBooking(prevState: any, formData: FormData) {
       return {
         success: false,
         message: "Include a delivery date",
+        timestamp: new Date().toISOString(),
       };
     }
 
@@ -73,12 +83,13 @@ export async function createBooking(prevState: any, formData: FormData) {
     return {
       success: true,
       message: "Booked successfully",
-      timestamp: Date.now(),
+      timestamp: new Date().toISOString(),
     };
   } catch (error: any) {
     return {
       success: false,
       message: error?.body?.message || error?.message || "something want wrong",
+      timestamp: new Date().toISOString(),
     };
   }
 }
@@ -132,7 +143,7 @@ export async function createDebt(prevState: any, formData: FormData) {
       return {
         success: false,
         message: "Booking not found.",
-        timestamp: Date.now(),
+        timestamp: new Date().toISOString(),
       };
     }
 

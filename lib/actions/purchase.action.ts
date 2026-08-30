@@ -87,13 +87,10 @@ export async function createPurchase(
         seller,
         description,
         quantity,
-
-        // Convert to Prisma Decimal
         cost,
         deposit,
         balance,
         totalPrice,
-
         paymentMethod,
       },
     });

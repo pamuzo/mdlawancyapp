@@ -88,8 +88,6 @@ type FilterType =
 const ITEMS_PER_PAGE = 15;
 
 export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
-  const router = useRouter();
-
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<FilterType>("ALL");
   const [currentPage, setCurrentPage] = useState(1);
@@ -97,9 +95,10 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
   const [completingBookingId, setCompletingBookingId] = useState<string | null>(
     null,
   );
-  /**
-   * Filter bookings by search term and selected filter.
-   */
+
+  const router = useRouter();
+
+  //  Filter bookings by search term and selected filter.
   const filteredBookings = useMemo(() => {
     const searchTerm = search.trim().toLowerCase();
 
@@ -261,44 +260,6 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
   };
 
   /**
-   * Mark booking as completed.
-   */
-  // const handleCompleteBooking = async (booking: Booking) => {
-  //   if (processingId) return;
-
-  //   try {
-  //     setProcessingId(booking.id);
-
-  //     const result = await CompleteStatus(booking.id);
-
-  //     // Supports actions that return an object as well as
-  //     // actions that simply complete without returning one.
-  //     if (
-  //       result &&
-  //       typeof result === "object" &&
-  //       "success" in result &&
-  //       !result.success
-  //     ) {
-  //       const message =
-  //         "message" in result && typeof result.message === "string"
-  //           ? result.message
-  //           : "Failed to complete booking";
-
-  //       toast.error(message);
-  //       return;
-  //     }
-
-  //     toast.success("Booking marked as completed");
-  //     router.refresh();
-  //   } catch (error) {
-  //     console.error("Complete booking error:", error);
-  //     toast.error("Something went wrong while completing the booking");
-  //   } finally {
-  //     setProcessingId(null);
-  //   }
-  // };
-
-  /**
    * Generate pagination numbers.
    */
   const getPageNumbers = (): (number | "...")[] => {
@@ -360,11 +321,6 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
           </p>
         </div>
         <AddBookingDialog />
-
-        {/* <Link href={"/add-bookings"}>
-          <h1 className="text-2xl font-bold">+ New Booking</h1>
-        </Link> */}
-        {/* <CreatePurchaseDialog /> */}
       </motion.div>
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard

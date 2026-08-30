@@ -28,6 +28,7 @@ import { createBooking } from "@/lib/actions/booking.action";
 import { Spinner } from "../ui/spinner";
 import { useFormStatus } from "react-dom";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 type Customer = {
   id: string;
@@ -60,28 +61,27 @@ function SubmitButton({ customer }: { customer: Customer | null }) {
 }
 
 export default function AddBookingDialog() {
-  type BookingActionState = {
-    success: boolean;
-    message: string;
-    timestamp: string;
-  };
-
-  const initialState: BookingActionState = {
+  const initialState = {
     success: false,
     message: "",
     timestamp: new Date().toISOString(),
   };
 
-  const [data, action] = useActionState(
-    async (prevState: BookingActionState, formData: FormData) => {
-      const result = await createBooking(prevState, formData);
-      return {
-        ...result,
-        timestamp: new Date().toISOString(),
-      } as BookingActionState;
-    },
+  const [state, formAction, isPending] = useActionState(
+    createBooking,
     initialState,
   );
+
+  // const [data, action] = useActionState(
+  //   async (prevState: BookingActionState, formData: FormData) => {
+  //     const result = await createBooking(prevState, formData);
+  //     return {
+  //       ...result,
+  //       timestamp: new Date().toISOString(),
+  //     } as BookingActionState;
+  //   },
+  //   initialState,
+  // );
   const formRef = useRef<HTMLFormElement>(null);
   const [customer, setCustomer] = useState<Customer | null>(null);
 
@@ -120,21 +120,22 @@ export default function AddBookingDialog() {
     setPaymentMethod("");
     setDeliveryDate("");
   };
+  const router = useRouter();
 
   useEffect(() => {
-    if (data?.success) {
+    if (state?.success) {
       toast.success("Booking successfully created!", {
         duration: 5000,
       });
-
+      router.refresh();
       setOpen(false);
       resetForm();
     }
 
-    if (data?.success === false && data?.message) {
-      toast.error(data.message);
+    if (state?.success === false && state?.message) {
+      toast.error(state.message);
     }
-  }, [data?.success, data?.message]);
+  }, [state?.success, state?.message, router, state?.timestamp]);
 
   // Close the dialog after successful submission
 
@@ -202,7 +203,7 @@ export default function AddBookingDialog() {
               </CardContent>
             </Card>
 
-            <form ref={formRef} action={action} className="space-y-6 pt-5">
+            <form action={formAction} className="space-y-6 pt-5">
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
                   <Label className="text-sm font-medium">Job Type</Label>

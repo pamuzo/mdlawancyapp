@@ -4,6 +4,7 @@ import { APP_NAME, APP_DESCRIPTION, SERVER_URL } from "../lib/constants/index";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "sonner";
+import ServiceWorkerRegister from "@/components/serviceWorkRegister";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -16,6 +17,19 @@ export const metadata: Metadata = {
   },
   description: APP_DESCRIPTION,
   metadataBase: new URL(SERVER_URL),
+
+  manifest: "/manifest.webmanifest",
+
+  icons: {
+    icon: "/images/icons/icon-192.png",
+    apple: "/images/icons/icon-192.png",
+  },
+
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "My App",
+  },
 };
 
 export default function RootLayout({
@@ -38,6 +52,7 @@ export default function RootLayout({
         >
           {children}
           <Toaster />
+          <ServiceWorkerRegister />
         </ThemeProvider>
       </body>
     </html>
