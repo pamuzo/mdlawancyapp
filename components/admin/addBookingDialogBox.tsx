@@ -37,6 +37,8 @@ type Customer = {
   email?: string | null;
   businessName?: string | null;
   timestamp?: string | null;
+  deposit?: number | null;
+  totalCredit?: number | null;
 };
 
 // interface SubmitButtonProps {
@@ -256,7 +258,12 @@ export default function AddBookingDialog() {
 
                   <Select
                     value={paymentMethod}
-                    onValueChange={(value) => setPaymentMethod(value ?? "")}
+                    onValueChange={(value) => {
+                      setPaymentMethod(value ?? "");
+                      if (value === "CREDIT") {
+                        setDeposit(String(customer?.totalCredit ?? ""));
+                      }
+                    }}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select payment method" />

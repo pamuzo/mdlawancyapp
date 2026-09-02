@@ -26,9 +26,22 @@ export async function createBooking(
     const paymentMethod = formData.get("paymentMethod") as string;
     const deliveryDate = formData.get("deliveryDate") as string;
 
+    //  && { totalCredit: 0 },
+    if (paymentMethod === "CREDIT") {
+      await prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          totalCredit: 0,
+          // ...(formData.get("paymentMethod") === "CREDIT" && { totalCredit: 0 }),
+        },
+      });
+    }
+
+    let overpaid;
     const totalPrice = quantity * cost;
     let balance = totalPrice - deposit;
-    let overpaid;
 
     if (balance < 0) {
       overpaid = deposit - totalPrice;
@@ -66,6 +79,7 @@ export async function createBooking(
         id: userId,
       },
       data: {
+        // ...(formData.get("paymentMethod") === "CREDIT" && { totalCredit: 0 }),
         totalJobs: {
           increment: quantity,
         },

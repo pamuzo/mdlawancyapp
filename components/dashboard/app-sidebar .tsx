@@ -56,10 +56,10 @@ const navigation = [
         title: "Bookings",
         url: "/bookings",
       },
-      {
-        title: "Add booking",
-        url: "/add-bookings",
-      },
+      // {
+      //   title: "Add booking",
+      //   url: "/add-bookings",
+      // },
     ],
   },
   {

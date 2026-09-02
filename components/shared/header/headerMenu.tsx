@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { usePathname } from "next/navigation";
+import PWAInstall from "@/components/pwa-install";
 
 const NAV_ITEMS = [
   { name: "Embroidery", href: "/embroidery" },

@@ -62,6 +62,7 @@ export async function searchUsers(search: string) {
       phoneNumber: true,
       totalSpent: true,
       totalJobs: true,
+      totalCredit: true,
     },
 
     take: 10,

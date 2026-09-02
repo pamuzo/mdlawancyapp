@@ -6,7 +6,6 @@ import { redirect } from "next/navigation";
 import { getSession } from "../get-session";
 import { profileSchema } from "../validator";
 import { prisma } from "@/db/prisma";
-import { revalidatePath } from "next/cache";
 import { formDataToObject } from "../utils";
 
 // Action to register a new user
