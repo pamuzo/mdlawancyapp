@@ -51,16 +51,7 @@ const navigation = [
   {
     title: "Bookings",
     icon: NotepadText,
-    items: [
-      {
-        title: "Bookings",
-        url: "/bookings",
-      },
-      // {
-      //   title: "Add booking",
-      //   url: "/add-bookings",
-      // },
-    ],
+    url: "/bookings",
   },
   {
     title: "Debt cleared",

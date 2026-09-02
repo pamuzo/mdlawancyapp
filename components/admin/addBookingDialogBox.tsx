@@ -179,7 +179,12 @@ export default function AddBookingDialog() {
                     </Label>
                     <UserAutocomplete
                       value={customer?.id}
-                      onSelect={setCustomer}
+                      onSelect={(user) =>
+                        setCustomer({
+                          ...user,
+                          totalCredit: Number(user.totalCredit),
+                        })
+                      }
                     />
                   </div>
 
