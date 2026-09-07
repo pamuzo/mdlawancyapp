@@ -61,6 +61,7 @@ type Booking = {
   id: string;
   userId: string;
   jobType: string;
+  jobDetails: string;
   status: string;
   quantity: number;
   totalPrice: number;
@@ -453,7 +454,19 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
                             href={`/bookings/${booking.id}`}
                             className="font-medium hover:underline"
                           >
-                            {booking.jobType}
+                            <div className="flex flex-col">
+                              <span className="font-medium">
+                                {booking?.jobType || "Unknown Job Type"}
+                              </span>
+
+                              {booking.user?.email && (
+                                <span className="text-xs text-muted-foreground">
+                                  {booking?.jobDetails ||
+                                    "No job details provided"}
+                                </span>
+                              )}
+                            </div>
+                            {}
                           </Link>
                         </TableCell>
 

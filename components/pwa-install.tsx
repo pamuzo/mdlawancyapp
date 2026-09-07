@@ -1,7 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { Download } from "lucide-react";
+import { Button } from "./ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -11,11 +19,31 @@ interface BeforeInstallPromptEvent extends Event {
   }>;
 }
 
+const subscribeToDisplayMode = (onStoreChange: () => void) => {
+  const mediaQuery = window.matchMedia("(display-mode: standalone)");
+  mediaQuery.addEventListener("change", onStoreChange);
+  return () => mediaQuery.removeEventListener("change", onStoreChange);
+};
+
+const getIsStandalone = () =>
+  window.matchMedia("(display-mode: standalone)").matches;
+
+const getIsIOS = () =>
+  /iphone|ipad|ipod/i.test(navigator.userAgent) && !("MSStream" in window);
+
+const noOpSubscribe = () => () => {};
+
 export default function PWAInstall() {
   const [installPrompt, setInstallPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
 
-  const [isInstalled, setIsInstalled] = useState(false);
+  const isInstalled = useSyncExternalStore(
+    subscribeToDisplayMode,
+    getIsStandalone,
+    () => false,
+  );
+  const isIOS = useSyncExternalStore(noOpSubscribe, getIsIOS, () => false);
+  const [showInstructions, setShowInstructions] = useState(false);
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (event: Event) => {
@@ -26,10 +54,6 @@ export default function PWAInstall() {
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
 
-    if (window.matchMedia("(display-mode: standalone)").matches) {
-      setIsInstalled(true);
-    }
-
     return () => {
       window.removeEventListener(
         "beforeinstallprompt",
@@ -39,7 +63,10 @@ export default function PWAInstall() {
   }, []);
 
   const installApp = async () => {
-    if (!installPrompt) return;
+    if (!installPrompt) {
+      setShowInstructions(true);
+      return;
+    }
 
     await installPrompt.prompt();
 
@@ -47,21 +74,32 @@ export default function PWAInstall() {
 
     if (outcome === "accepted") {
       setInstallPrompt(null);
-      setIsInstalled(true);
     }
   };
 
-  if (isInstalled || !installPrompt) {
+  if (isInstalled || (!installPrompt && !isIOS)) {
     return null;
   }
 
   return (
-    <button
-      onClick={installApp}
-      className="inline-flex items-center gap-2 rounded-lg bg-black px-4 py-3 text-sm font-medium text-white transition hover:opacity-90"
-    >
-      <Download className="h-4 w-4" />
-      Install App
-    </button>
+    <>
+      <Button
+        onClick={installApp}
+        className="inline-flex items-center gap-2 rounded-lg bg-black px-4 py-3 text-sm font-medium text-white transition hover:opacity-90"
+      >
+        <Download className="h-4 w-4" />
+        {isIOS ? "Add to Home Screen" : "Install App"}
+      </Button>
+      <Dialog open={showInstructions} onOpenChange={setShowInstructions}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Install MD Lawancy</DialogTitle>
+            <DialogDescription>
+              Tap the Share button in Safari, then choose Add to Home Screen.
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

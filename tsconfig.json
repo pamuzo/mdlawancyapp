@@ -30,7 +30,7 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts",
     "app/(admin)/add-bookings/newBooking",
-    "app/(root)/profile/dddd"
+    "app/(dashboard)/profile/dddd"
   ],
   "exclude": ["node_modules"]
 }

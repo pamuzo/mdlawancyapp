@@ -91,6 +91,7 @@ model User {
   totalJobs       Int       @default(0)
   totalSpent      Decimal   @default(0) @db.Decimal(12, 2)
   totalDebits     Decimal   @default(0) @db.Decimal(12, 2)
+  previousDebits  Decimal   @default(0) @db.Decimal(12, 2)
   totalCredit     Decimal   @default(0) @db.Decimal(12, 2)
   role            String    @default("USER")
   addresses       Json      @default("[]") @db.Json

@@ -11,6 +11,7 @@ import {
   User,
   Wallet,
 } from "lucide-react";
+import moment from "moment";
 
 type Booking = {
   id: string;
@@ -182,13 +183,17 @@ export default function BookingDetails(bookingData: Booking[]) {
               <TimelineRow
                 icon={<CalendarDays size={18} />}
                 title="Created"
-                value={new Date(booking.createdAt).toLocaleString()}
+                value={moment(new Date(booking.createdAt)).format(
+                  "MMMM Do YYYY, h:mm:ss a",
+                )}
               />
 
               <TimelineRow
                 icon={<ClipboardList size={18} />}
                 title="Delivery Date"
-                value={new Date(booking.deliveryDate).toLocaleDateString()}
+                value={moment(new Date(booking.deliveryDate)).format(
+                  "MMMM Do YYYY, ",
+                )}
               />
             </CardContent>
           </Card>

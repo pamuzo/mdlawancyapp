@@ -13,6 +13,7 @@ type Props = {
     totalCredit: string;
     totalDebits: string;
     totalSpent: string;
+    previousDebits: string;
     totalJobs: string;
     role: string;
     phoneNumber: string;
@@ -98,12 +99,22 @@ export async function ProfileStats({ user }: Props) {
           </Button>
         </div>
       </div>
-      <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-slate-900">
-        <p className="text-sm text-slate-500">Reputation</p>
-        <h3 className="mt-2 text-3xl font-bold text-orange-500">
-          {isNaN(reputation) ? "0" : reputation.toFixed(1)}%
-        </h3>
-      </div>
+      {user?.previousDebits > "1" ? (
+        <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-slate-900">
+          <p className="text-sm text-slate-500">Previous Debits</p>
+          <h3 className="mt-2 text-3xl font-bold text-red-500">
+            ₦{user.previousDebits.toLocaleString()}
+          </h3>
+          <p className="text-xs text-slate-500">Before registration</p>
+        </div>
+      ) : (
+        <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-slate-900">
+          <p className="text-sm text-slate-500">Reputation</p>
+          <h3 className="mt-2 text-3xl font-bold text-orange-500">
+            {isNaN(reputation) ? "0" : reputation.toFixed(1)}%
+          </h3>
+        </div>
+      )}
     </div>
   );
 }

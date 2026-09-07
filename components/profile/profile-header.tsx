@@ -1,6 +1,10 @@
-import Link from "next/link";
-import { redirect } from "next/navigation";
+"use client";
+
+import { motion } from "framer-motion";
 import { Button } from "../ui/button";
+import { Plus } from "lucide-react";
+import Link from "next/link";
+import moment from "moment";
 
 type Props = {
   user: {
@@ -12,33 +16,35 @@ type Props = {
 };
 
 export function ProfileHeader({ user }: Props) {
+  const currentDate = new Date();
   return (
-    <section className="overflow-hidden rounded-3xl bg-white shadow-sm dark:bg-slate-900">
-      <div className="h-56 bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500" />
+    <motion.div
+      initial={{ opacity: 0, y: -15 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-end"
+    >
+      <div>
+        <p className="mb-1 text-sm font-medium text-green-600">
+          {moment(currentDate).format("MMMM Do YYYY, ")}
+        </p>
 
-      <div className="relative px-8 pb-8">
-        <div className="-mt-16 flex flex-col gap-6 md:flex-row md:items-end">
-          <img
-            src={
-              user.image ||
-              `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                user.name,
-              )}`
-            }
-            alt={user.name}
-            className="h-32 w-32 rounded-full border-4 border-white object-cover shadow-xl"
-          />
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+          Welcome back, {user?.name} 👋
+        </h1>
 
-          <div className="flex-1">
-            <h1 className="text-3xl font-bold">{user.name}</h1>
-            <p className="text-slate-500">{user.email}</p>
-          </div>
-
-          <Link href={`/profile/${user.id}`}>
-            <Button>Edit Profile</Button>
-          </Link>
-        </div>
+        <p className="mt-1 text-sm text-slate-500">
+          Thank you for being a valued customer.
+        </p>
       </div>
-    </section>
+
+      <div className="flex gap-2">
+        <Link href={`/profile/${user.id}`}>
+          <Button>
+            {/* <Plus className="mr-2 h-4 w-4" /> */}
+            Update Profile
+          </Button>
+        </Link>
+      </div>
+    </motion.div>
   );
 }

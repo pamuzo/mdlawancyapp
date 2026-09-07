@@ -26,8 +26,13 @@ export default function NotFoundPage() {
             Go to Home
           </Button>
         </div>
+        <div
+          className="mt-8
+         text-sm text-slate-500"
+        >
+          <AdsterraBanner />
+        </div>
       </div>
-      <AdsterraBanner />
     </main>
   );
 }

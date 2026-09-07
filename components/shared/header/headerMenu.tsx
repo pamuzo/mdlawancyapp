@@ -197,6 +197,8 @@ function HeaderMenu({
                 {user ? `Profile (${user.email})` : "Sign in"}
               </a>
 
+              <PWAInstall />
+
               {/* Social icons in mobile menu */}
               <div className="flex justify-center gap-4 pt-3 ">
                 <Link href="" target="_blank" aria-label="Facebook">

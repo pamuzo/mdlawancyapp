@@ -200,9 +200,19 @@ export default function CustomersPage() {
                     {(currentPage - 1) * 15 + index + 1}
                   </TableCell>
                   <TableCell>
-                    <Link href={`/customers/${customer.id}`}>
-                      {customer.name}
-                    </Link>
+                    <div className="flex flex-col">
+                      <span className="font-medium">
+                        <Link href={`/customers/${customer.id}`}>
+                          {customer.name}
+                        </Link>
+                      </span>
+
+                      {customer?.businessName && (
+                        <span className="text-xs text-muted-foreground">
+                          {customer?.businessName}
+                        </span>
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell>{customer.phoneNumber}</TableCell>
                   <TableCell>{customer.email}</TableCell>

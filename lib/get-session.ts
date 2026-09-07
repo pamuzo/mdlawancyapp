@@ -21,6 +21,7 @@ export const getSession = cache(async () => {
       totalCredit: true,
       totalSpent: true,
       totalJobs: true,
+      previousDebits: true,
     },
   });
 
@@ -33,6 +34,7 @@ export const getSession = cache(async () => {
       totalCredit: user?.totalCredit.toNumber() ?? 0,
       totalSpent: user?.totalSpent.toNumber() ?? 0,
       totalJobs: user?.totalJobs ?? 0,
+      previousDebits: user?.previousDebits.toNumber() ?? 0,
     },
   };
 });
