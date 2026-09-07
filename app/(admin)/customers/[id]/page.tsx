@@ -47,6 +47,7 @@ export default async function CustomerPage({
               totalCredit: customer.totalCredit.toString(),
               totalDebits: customer.totalDebits.toString(),
               totalSpent: customer.totalSpent.toString(),
+              previousDebits: customer.previousDebits.toString(),
               totalJobs: customer.totalJobs.toString(),
               phoneNumber: customer.phoneNumber ?? "",
             }}
