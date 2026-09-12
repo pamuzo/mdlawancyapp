@@ -103,7 +103,7 @@ export async function ProfileStats({ user }: Props) {
         <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-slate-900">
           <p className="text-sm text-slate-500">Previous Debits</p>
           <h3 className="mt-2 text-3xl font-bold text-red-500">
-            ₦{user.previousDebits.toLocaleString()}
+            ₦{Number(user.previousDebits).toLocaleString()}
           </h3>
           <p className="text-xs text-slate-500">Before registration</p>
         </div>
