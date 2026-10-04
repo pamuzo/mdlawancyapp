@@ -24,7 +24,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { MoreHorizontal, X, Loader2 } from "lucide-react";
+import {
+  MoreHorizontal,
+  X,
+  Loader2,
+  NotebookPen,
+  CircleDollarSignIcon,
+  GoalIcon,
+  ChartNoAxesCombined,
+} from "lucide-react";
 import {
   Pagination,
   PaginationContent,
@@ -55,21 +63,30 @@ import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
 import Debt from "./debt";
-import { getDebtCleared } from "@/lib/actions/debt.actions";
 import { formatDate } from "@/lib/utils";
+import BookingSheet from "./bookingSheet";
+import StatCard from "../stateCard";
+import { motion } from "framer-motion";
 
 type customerBookings = {
   id: string;
   userId: string;
   jobType: string;
+  jobDetails: string;
   status: string;
   quantity: number;
   totalPrice: number;
   deposit: number;
   balance: number;
-  createdAt: string;
   deliveryDate: string;
+  createdAt: string;
   paymentMethod: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    phoneNumber: string | null;
+  };
 };
 
 type customer = {
@@ -78,6 +95,7 @@ type customer = {
 };
 
 const ITEMS_PER_PAGE = 15;
+
 export default function UserBooking({
   customerBookings,
   customer,
@@ -93,11 +111,11 @@ export default function UserBooking({
   const [amount, setAmount] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [sheetOpen, setSheetOpen] = useState(false);
-  const [selectedBooking, setSelectedBooking] =
-    useState<customerBookings | null>(null);
   const [completingBookingId, setCompletingBookingId] = useState<string | null>(
     null,
   );
+  const [selectedBooking, setSelectedBooking] =
+    useState<customerBookings | null>(null);
 
   const [state, formAction, pending] = useActionState(createDebt, {
     success: false,
@@ -190,6 +208,7 @@ export default function UserBooking({
     return range;
   };
 
+  // handle complete booking
   const handleCompleteBooking = async (bookingId: string) => {
     setCompletingBookingId(bookingId);
 
@@ -260,61 +279,121 @@ export default function UserBooking({
     amount <= 0 || amount > (selectedBooking?.balance ?? 0);
   const isInvalidPaymentMethod = paymentMethod === "";
 
+  const totalDebits = filteredBookings.reduce(
+    (sum, booking) => sum + booking.balance,
+    0,
+  );
+
+  const pendingBookings = filteredBookings.filter(
+    (b) => b.status === "PENDING",
+  ).length;
+
+  const completedBookings = filteredBookings.filter(
+    (b) => b.status === "COMPLETED",
+  ).length;
+
   return (
     <div
       className={`space-y-6  ${pathname === "/userbooking" && "max-w-7xl mx-auto pt-3  sm:px-6 lg:px-8"}`}
     >
-      <Card>
-        <CardHeader>
-          <CardTitle>Search {customer.name} booking</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4 pt-6 md:flex-row">
-          <div className="relative  w-full max-w-xl">
-            <Input
-              placeholder="Search bookings..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className=" widpr-10"
-            />
-            {search && (
-              <button
-                type="button"
-                onClick={() => setSearch("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                aria-label="Clear search"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            )}
-          </div>
-          <Select
-            value={filter}
-            onValueChange={(value: string | null) => setFilter(value ?? "ALL")}
-          >
-            <SelectTrigger className="md:w-[200px]">
-              <SelectValue />
-            </SelectTrigger>
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-7 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+      >
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+            Bookings
+          </h1>
 
-            <SelectContent>
-              <SelectItem value="ALL">All Bookings</SelectItem>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Track bookings, payments, and outstanding balances.
+          </p>
+        </div>
+      </motion.div>
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard
+          title="Total bookings"
+          value={`${filteredBookings.length.toLocaleString()}`}
+          icon={NotebookPen}
+          description="Total bookings"
+          color="bg-primary/10 text-green-600"
+        />
 
-              {/* Status filters */}
-              <SelectItem value="PENDING">Pending</SelectItem>
-              <SelectItem value="COMPLETED">Completed</SelectItem>
-              <SelectItem value="CANCELLED">Cancelled</SelectItem>
+        <StatCard
+          title="Total Debits"
+          value={`₦${totalDebits.toLocaleString()}`}
+          icon={CircleDollarSignIcon}
+          description="Total revenue"
+          color="bg-primary/10 text-primary"
+        />
 
-              {/* Balance filters */}
-              <SelectItem value="PAID">Paid (Balance = 0)</SelectItem>
-              <SelectItem value="OUTSTANDING">Outstanding Balance</SelectItem>
-            </SelectContent>
-          </Select>
-        </CardContent>
-      </Card>
-
+        <StatCard
+          title="Total Pending"
+          value={`${pendingBookings.toLocaleString()}`}
+          icon={ChartNoAxesCombined}
+          description="Total pending bookings"
+          color="bg-primary/10 text-orange-600"
+        />
+        <StatCard
+          title="Total Completed"
+          value={`${completedBookings.toLocaleString()}`}
+          icon={GoalIcon}
+          description="Total completed bookings"
+          color="bg-violet-500/10 text-violet-600"
+        />
+      </div>
       {/* Table */}
+
       <Card className="my-4">
-        <CardHeader>
-          <CardTitle>All Bookings for {customer.name}</CardTitle>
+        <CardHeader className="border-b bg-background/70 px-4 py-4 sm:px-6">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <CardTitle>All Bookings </CardTitle>
+            </div>
+
+            <div className="relative  w-full max-w-xl">
+              <Input
+                placeholder="Search bookings..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className=" widpr-10"
+              />
+              {search && (
+                <button
+                  type="button"
+                  onClick={() => setSearch("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  aria-label="Clear search"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+            <Select
+              value={filter}
+              onValueChange={(value: string | null) =>
+                setFilter(value ?? "ALL")
+              }
+            >
+              <SelectTrigger className="md:w-[200px]">
+                <SelectValue />
+              </SelectTrigger>
+
+              <SelectContent>
+                <SelectItem value="ALL">All Bookings</SelectItem>
+
+                {/* Status filters */}
+                <SelectItem value="PENDING">Pending</SelectItem>
+                <SelectItem value="COMPLETED">Completed</SelectItem>
+                <SelectItem value="CANCELLED">Cancelled</SelectItem>
+
+                {/* Balance filters */}
+                <SelectItem value="PAID">Paid (Balance = 0)</SelectItem>
+                <SelectItem value="OUTSTANDING">Outstanding Balance</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
@@ -347,11 +426,17 @@ export default function UserBooking({
                       {(currentPage - 1) * ITEMS_PER_PAGE + index + 1}
                     </TableCell>
                     <TableCell>
-                      <Link
-                        href={`/${pathname === "/userbooking" ? "userbooking" : "bookings"}/${booking.id}`}
+                      <button
+                        type="button"
+                        onClick={() => setSelectedBooking(booking)}
+                        className="flex flex-col text-left font-medium hover:cursor-pointer"
                       >
+                        {/* <Link
+                        href={`/${pathname === "/userbooking" ? "userbooking" : "bookings"}/${booking.id}`}
+                        > */}
                         {booking.jobType}
-                      </Link>
+                      </button>
+                      {/* </Link> */}
                     </TableCell>
 
                     <TableCell>
@@ -640,22 +725,13 @@ export default function UserBooking({
                 </SheetFooter>
               </form>
             </div>
-
-            {/* {state.message && (
-              <div
-                className={`rounded-md p-3 text-sm  ${
-                  state.success
-                    ? "bg-green-100 text-green-700"
-                    : "bg-red-100 text-red-700"
-                }`}
-              >
-                {state.message}
-              </div>
-            )} */}
           </SheetContent>
         </Sheet>
       </Card>
-
+      <BookingSheet
+        setSelectedBooking={setSelectedBooking}
+        selectedBooking={selectedBooking}
+      />
       <Debt debts={customerDebts} />
     </div>
   );

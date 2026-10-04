@@ -62,6 +62,11 @@ const mainNavigation = [
     icon: PiggyBank,
   },
   {
+    title: "Bookings",
+    href: "/userbooking",
+    icon: PiggyBank,
+  },
+  {
     title: "Shop",
     href: "/Shop",
     icon: Building2,
@@ -71,11 +76,11 @@ const mainNavigation = [
     href: "/gallary",
     icon: HandCoins,
   },
-  {
-    title: "Games",
-    href: "/games",
-    icon: Receipt,
-  },
+  // {
+  //   title: "Games",
+  //   href: "/games",
+  //   icon: Receipt,
+  // },
 ];
 
 const accountNavigation = [
@@ -139,7 +144,7 @@ export default function UserSidebar({ session }: { session: any }) {
             MAIN
         ==================================================== */}
 
-        {/* <SidebarGroup>
+        <SidebarGroup>
           <SidebarGroupLabel>Main Menu</SidebarGroupLabel>
 
           <SidebarGroupContent>
@@ -168,7 +173,7 @@ export default function UserSidebar({ session }: { session: any }) {
               })}
             </SidebarMenu>
           </SidebarGroupContent>
-        </SidebarGroup> */}
+        </SidebarGroup>
 
         {/* ===================================================
             ACCOUNT

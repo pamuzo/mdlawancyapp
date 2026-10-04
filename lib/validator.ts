@@ -52,6 +52,7 @@ export const signUpSchema = z.object({
 export const newBookingSchema = z.object({
   userId: z.string(),
   jobType: z.string({ message: "Include a job type" }),
+  paymentMethod: z.string({ message: "include a payment method" }),
   jobDetails: z.string().min(3, "Include a short discription about the job"),
   deliveryDate: z.date({ message: "Select a delivery Date" }),
 });

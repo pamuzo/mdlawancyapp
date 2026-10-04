@@ -104,12 +104,12 @@ export default function CustomersPage() {
   const sortedCustomers = useMemo(() => {
     return [...filteredCustomers].sort((a, b) => {
       const reputationA =
-        ((Number(a?.totalSpent) / totalSpentOfAllUser) * 0.7 +
-          (Number(a?.totalJobs) / totalQuantityOfAllUser) * 0.3) *
+        ((Number(a?.totalSpent) / totalSpentOfAllUser) * 0.9 +
+          (Number(a?.totalJobs) / totalQuantityOfAllUser) * 0.1) *
         100;
       const reputationB =
-        ((Number(b?.totalSpent) / totalSpentOfAllUser) * 0.7 +
-          (Number(b?.totalJobs) / totalQuantityOfAllUser) * 0.3) *
+        ((Number(b?.totalSpent) / totalSpentOfAllUser) * 0.9 +
+          (Number(b?.totalJobs) / totalQuantityOfAllUser) * 0.1) *
         100;
       return reputationB - reputationA;
     });
@@ -225,9 +225,9 @@ export default function CustomersPage() {
                   <TableCell>
                     {(
                       ((Number(customer?.totalSpent) / totalSpentOfAllUser) *
-                        0.7 +
+                        0.9 +
                         (Number(customer?.totalJobs) / totalQuantityOfAllUser) *
-                          0.3) *
+                          0.1) *
                       100
                     ).toFixed(2)}
                     %

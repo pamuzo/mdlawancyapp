@@ -27,5 +27,11 @@ export default async function UserBookingPage() {
           ? booking.deliveryDate.toISOString()
           : booking.deliveryDate,
     }));
-  return <UserBooking customer={user} customerBookings={normalizedBookings} customerDebts={[]} />;
+  return (
+    <UserBooking
+      customer={user}
+      customerBookings={normalizedBookings}
+      customerDebts={[]}
+    />
+  );
 }

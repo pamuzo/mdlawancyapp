@@ -41,10 +41,6 @@ type Customer = {
   totalCredit?: number | null;
 };
 
-// interface SubmitButtonProps {
-//   customer: Customer | null;
-// }
-
 function SubmitButton({ customer }: { customer: Customer | null }) {
   const { pending } = useFormStatus();
 
@@ -74,20 +70,9 @@ export default function AddBookingDialog() {
     initialState,
   );
 
-  // const [data, action] = useActionState(
-  //   async (prevState: BookingActionState, formData: FormData) => {
-  //     const result = await createBooking(prevState, formData);
-  //     return {
-  //       ...result,
-  //       timestamp: new Date().toISOString(),
-  //     } as BookingActionState;
-  //   },
-  //   initialState,
-  // );
   const formRef = useRef<HTMLFormElement>(null);
   const [customer, setCustomer] = useState<Customer | null>(null);
 
-  // const [userId, setJobType] = useState("");
   const [open, setOpen] = useState(false);
   const [jobType, setJobType] = useState("");
   const [jobDetails, setJobDetails] = useState("");
@@ -96,7 +81,6 @@ export default function AddBookingDialog() {
   const [deposit, setDeposit] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [deliveryDate, setDeliveryDate] = useState("");
-  // cost:number
 
   const depositAmount = useMemo(() => parseFloat(deposit) || 0, [deposit]);
 
@@ -290,6 +274,7 @@ export default function AddBookingDialog() {
                     type="hidden"
                     name="paymentMethod"
                     value={paymentMethod}
+                    required
                   />
                 </div>
               </div>
@@ -309,6 +294,8 @@ export default function AddBookingDialog() {
                   required
                 />
               </div>
+
+              
 
               <div className="grid gap-4 md:grid-cols-3">
                 <div>
@@ -428,6 +415,9 @@ export default function AddBookingDialog() {
                 <SubmitButton customer={customer} />
               </div>
             </form>
+            {state && !state.success && state.message && (
+              <div className="text-center text-destructive">{state.message}</div>
+            )}
           </CardContent>
         </div>
       </DialogContent>

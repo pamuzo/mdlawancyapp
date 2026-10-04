@@ -58,6 +58,13 @@ export async function createBooking(
         timestamp: new Date().toISOString(),
       };
     }
+    if (!formData.get("paymentMethod")) {
+      return {
+        success: false,
+        message: "Include a payment method",
+        timestamp: new Date().toISOString(),
+      };
+    }
 
     await prisma.booking.create({
       data: {

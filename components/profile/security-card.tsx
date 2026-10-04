@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import BookingDetails from "../bookings/bookingDetails";
+// import BookingDetails from "../bookings/bookingDetails";
 import { MoreHorizontal } from "lucide-react";
 
 import {
@@ -130,16 +130,9 @@ export async function RecentActivities({ user }: Props) {
                   <div
                     className={`w-3 h-3 rounded-full ${bgColor[stockLevel]}`}
                   />
-                  {/* <Button onClick={() => BookingDetails(booked)}> */}
-                  <span
-                    // onClick={() => BookingDetails(booked)}
-                    className="text-sm font-medium "
-                  >
-                    <Link href={`/userbooking/${booking.id}`}>
-                      {booking.jobType}
-                    </Link>
+                  <span className="text-sm font-medium ">
+                    {booking.jobType}
                   </span>
-                  {/* </Button> */}
                 </TableCell>
                 <TableCell className="text-sm font-medium">
                   {Number(booking.totalPrice).toLocaleString()}
@@ -155,13 +148,13 @@ export async function RecentActivities({ user }: Props) {
                       <MoreHorizontal className="h-4 w-4" />
                     </DropdownMenuTrigger>
 
-                    <DropdownMenuContent align="end">
+                    {/* <DropdownMenuContent align="end">
                       <DropdownMenuItem>
                         <Link href={`/userbooking/${booking.id}`}>
                           View Details
                         </Link>
                       </DropdownMenuItem>
-                    </DropdownMenuContent>
+                    </DropdownMenuContent> */}
                   </DropdownMenu>
                 </TableCell>
               </TableRow>

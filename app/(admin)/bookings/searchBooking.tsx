@@ -54,8 +54,10 @@ import {
   CompleteStatus,
   deleteBooking,
 } from "@/lib/actions/booking.action";
+
 import StatCard from "@/components/stateCard";
 import AddBookingDialog from "@/components/admin/addBookingDialogBox";
+import BookingSheet from "@/components/bookings/bookingSheet";
 
 type Booking = {
   id: string;
@@ -68,6 +70,7 @@ type Booking = {
   deposit: number;
   balance: number;
   deliveryDate: string;
+  createdAt: string;
   paymentMethod: string;
   user: {
     id: string;
@@ -96,6 +99,8 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
   const [completingBookingId, setCompletingBookingId] = useState<string | null>(
     null,
   );
+
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
 
   const router = useRouter();
 
@@ -264,25 +269,22 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
    * Generate pagination numbers.
    */
   const getPageNumbers = (): (number | "...")[] => {
-    if (totalPages <= 1) {
-      return [];
-    }
+    if (totalPages <= 1) return [];
 
-    const delta = 1;
     const pages: (number | "...")[] = [];
 
-    const startPage = Math.max(2, currentPage - delta);
-    const endPage = Math.min(totalPages - 1, currentPage + delta);
+    const start = Math.max(2, currentPage - 1);
+    const end = Math.min(totalPages - 1, currentPage + 1);
 
-    if (startPage > 2) {
+    if (start > 2) {
       pages.push("...");
     }
 
-    for (let page = startPage; page <= endPage; page++) {
+    for (let page = start; page <= end; page++) {
       pages.push(page);
     }
 
-    if (endPage < totalPages - 1) {
+    if (end < totalPages - 1) {
       pages.push("...");
     }
 
@@ -450,24 +452,17 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
 
                         {/* Job Type */}
                         <TableCell>
-                          <Link
-                            href={`/bookings/${booking.id}`}
-                            className="font-medium hover:underline"
+                          <button
+                            type="button"
+                            onClick={() => setSelectedBooking(booking)}
+                            className="flex flex-col text-left font-medium hover:cursor-pointer"
                           >
-                            <div className="flex flex-col">
-                              <span className="font-medium">
-                                {booking?.jobType || "Unknown Job Type"}
-                              </span>
+                            <span>{booking.jobType || "Unknown Job Type"}</span>
 
-                              {booking.user?.email && (
-                                <span className="text-xs text-muted-foreground">
-                                  {booking?.jobDetails ||
-                                    "No job details provided"}
-                                </span>
-                              )}
-                            </div>
-                            {}
-                          </Link>
+                            <span className="text-xs text-muted-foreground">
+                              {booking.jobDetails || "No job details provided"}
+                            </span>
+                          </button>
                         </TableCell>
 
                         {/* Customer */}
@@ -733,6 +728,13 @@ export default function SearchBooking({ bookings }: { bookings: Booking[] }) {
           </div>
         </CardContent>
       </Card>
+
+      {/* Booking details */}
+
+      <BookingSheet
+        setSelectedBooking={setSelectedBooking}
+        selectedBooking={selectedBooking}
+      />
     </div>
   );
 }
@@ -760,16 +762,12 @@ function StatusBadge({ status }: { status: string }) {
       {formatStatus(status)}
     </Badge>
   );
-}
 
-/**
- * Convert values such as IN_PROGRESS into
- * human-readable labels.
- */
-function formatStatus(status: string) {
-  return status
-    .toLowerCase()
-    .split("_")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
+  function formatStatus(status: string) {
+    return status
+      .toLowerCase()
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  }
 }

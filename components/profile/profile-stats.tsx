@@ -42,8 +42,9 @@ export async function ProfileStats({ user }: Props) {
   );
 
   const reputation =
-    ((Number(user?.totalSpent) / totalSpentOfAllUser) * 0.7 +
-      (Number(user?.totalJobs) / totalQuantityOfAllUser) * 0.3) *
+    (Number(user?.totalSpent) / totalSpentOfAllUser) *
+    0.8 *
+    // (Number(user?.totalJobs) / totalQuantityOfAllUser) * 0.2)
     100;
 
   return (
