@@ -116,6 +116,9 @@ export default function UserBooking({
   );
   const [selectedBooking, setSelectedBooking] =
     useState<customerBookings | null>(null);
+  const [detailBooking, setDetailBooking] = useState<customerBookings | null>(
+    null,
+  );
 
   const [state, formAction, pending] = useActionState(createDebt, {
     success: false,
@@ -428,15 +431,11 @@ export default function UserBooking({
                     <TableCell>
                       <button
                         type="button"
-                        onClick={() => setSelectedBooking(booking)}
+                        onClick={() => setDetailBooking(booking)}
                         className="flex flex-col text-left font-medium hover:cursor-pointer"
                       >
-                        {/* <Link
-                        href={`/${pathname === "/userbooking" ? "userbooking" : "bookings"}/${booking.id}`}
-                        > */}
                         {booking.jobType}
                       </button>
-                      {/* </Link> */}
                     </TableCell>
 
                     <TableCell>
@@ -476,12 +475,10 @@ export default function UserBooking({
                         </DropdownMenuTrigger>
 
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
-                            <Link
-                              href={`/${pathname === "/userbooking" ? "userbooking" : "bookings"}/${booking.id}`}
-                            >
-                              View Details
-                            </Link>
+                          <DropdownMenuItem
+                            onClick={() => setDetailBooking(booking)}
+                          >
+                            View Details
                           </DropdownMenuItem>
 
                           {/* to clear the debt */}
@@ -728,10 +725,12 @@ export default function UserBooking({
           </SheetContent>
         </Sheet>
       </Card>
+      {/* this is a placeholder for the booking sheet */}
       <BookingSheet
-        setSelectedBooking={setSelectedBooking}
-        selectedBooking={selectedBooking}
+        setSelectedBooking={setDetailBooking}
+        selectedBooking={detailBooking}
       />
+      {/* this is a placeholder for the list of debts cleared */}
       <Debt debts={customerDebts} />
     </div>
   );
