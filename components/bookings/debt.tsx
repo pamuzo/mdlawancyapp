@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { formatDate } from "@/lib/utils";
 
 interface DebtRecord {
   id: string;
@@ -28,7 +29,7 @@ export default function Debt({ debts }: { debts: DebtRecord[] }) {
     <Card className="w-full">
       <CardHeader>
         <CardTitle>Debt Cleared</CardTitle>
-        <CardDescription>List of all cleared debts.</CardDescription>
+        <CardDescription>List of 10 recently cleared debts.</CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
@@ -44,9 +45,7 @@ export default function Debt({ debts }: { debts: DebtRecord[] }) {
               <TableRow key={debt.id}>
                 <TableCell>{debt.user?.name}</TableCell>
                 <TableCell>₦{Number(debt.amount).toLocaleString()}</TableCell>
-                <TableCell>
-                  {new Date(debt.createdAt).toLocaleDateString()}
-                </TableCell>
+                <TableCell>{formatDate(debt.createdAt)}</TableCell>
               </TableRow>
             ))}
           </TableBody>

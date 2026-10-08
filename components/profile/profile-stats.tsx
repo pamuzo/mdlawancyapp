@@ -1,7 +1,6 @@
 import { allCustomers } from "@/lib/actions/customers.action";
 import { Button } from "../ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
-import { ClearDebtForm } from "./clearAlldebt";
+import { ClearDebtDialog } from "./clearAlldebt";
 import { getSession } from "@/lib/get-session";
 
 type Props = {
@@ -11,7 +10,7 @@ type Props = {
     email: string;
     cashBack: string;
     totalCredit: string;
-    totalDebits: string;
+    totalDebits: string | number;
     totalSpent: string;
     previousDebits: string;
     totalJobs: string;
@@ -56,7 +55,7 @@ export async function ProfileStats({ user }: Props) {
             ₦{Number(user.cashBack)?.toLocaleString()}
           </h3>
           <Button
-            variant={"secondary"}
+            // variant={"secondary"}
             size={"xs"}
             className={`mt-2 ${adminUser?.role !== "admin" && "hidden"}`}
           >
@@ -71,33 +70,27 @@ export async function ProfileStats({ user }: Props) {
           <h3 className="mt-2 text-3xl font-bold text-red-500">
             ₦{Number(user.totalDebits).toLocaleString()}
           </h3>
-          <Dialog>
-            <DialogTrigger
-              className={`mt-3 ${adminUser?.role !== "admin" && "hidden"}`}
-            >
-              Clear Debt
-            </DialogTrigger>
-            <DialogContent>
-              <ClearDebtForm
-                user={{ ...user, totalDebits: Number(user.totalDebits) }}
-              />
-            </DialogContent>
-          </Dialog>
+          {adminUser?.role === "admin" && (
+            <ClearDebtDialog user={user} triggerLabel="Clear Debt" />
+          )}
         </div>
       </div>
       <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-slate-900">
-        <p className="text-sm text-slate-500">Total in Credit</p>
+        <p className="text-sm text-slate-500">Available funds</p>
         <div className="flex justify-between align-baseline">
           <h3 className="mt-2 text-3xl font-bold text-green-500">
             ₦{user.totalCredit.toLocaleString()}
           </h3>
-          <Button
-            variant={"secondary"}
+          {adminUser?.role === "admin" && (
+            <ClearDebtDialog user={user} triggerLabel="+Add Money" />
+          )}
+          {/* <Button
+            // variant={"secondary"}
             size={"xs"}
             className={`mt-2 ${adminUser?.role !== "admin" && "hidden"}`}
           >
-            Clear Credit
-          </Button>
+            +Add Money
+          </Button> */}
         </div>
       </div>
       {user?.previousDebits > "1" ? (

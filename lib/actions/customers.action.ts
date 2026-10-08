@@ -70,3 +70,16 @@ export async function searchUsers(search: string) {
 
   return users;
 }
+// delete customer
+export async function deleteCustomer(customerId: string) {
+  try {
+    await prisma.user.delete({
+      where: {
+        id: customerId,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}

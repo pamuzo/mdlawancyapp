@@ -26,10 +26,11 @@ export default async function CustomerPage({
       createdAt: booking.createdAt.toString(),
       deliveryDate: booking.deliveryDate?.toString(),
     }));
+  // .slice(0, 20);
 
   const customer = customers.find((customer) => customer?.id === id);
   const debts = await getDebtCleared();
-  const customerDebts = debts.filter((debt) => debt.userId === id);
+  const customerDebts = debts.filter((debt) => debt.userId === id).slice(0, 10);
 
   return (
     <div className="flex flex-col gap-4">

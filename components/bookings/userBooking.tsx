@@ -56,17 +56,16 @@ import { Label } from "@/components/ui/label";
 import {
   cancelBooking,
   CompleteStatus,
-  createDebt,
   deleteBooking,
 } from "@/lib/actions/booking.action";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
-import Link from "next/link";
 import Debt from "./debt";
 import { formatDate } from "@/lib/utils";
 import BookingSheet from "./bookingSheet";
 import StatCard from "../stateCard";
 import { motion } from "framer-motion";
+import { createDebt } from "@/lib/actions/debt.actions";
 
 type customerBookings = {
   id: string;

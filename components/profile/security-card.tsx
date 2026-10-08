@@ -12,12 +12,7 @@ import {
 // import BookingDetails from "../bookings/bookingDetails";
 import { MoreHorizontal } from "lucide-react";
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-  DropdownMenuItem,
-} from "../ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
 type Props = {
   user: {

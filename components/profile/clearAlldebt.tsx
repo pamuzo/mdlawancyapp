@@ -1,12 +1,14 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
-import { clearAllDebts } from "@/lib/actions/booking.action";
+import { useActionState, useCallback, useEffect, useState } from "react";
+
+import { addMoney, clearAllDebts } from "@/lib/actions/debt.actions";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Label } from "@radix-ui/react-label";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import {
   Select,
   SelectContent,
@@ -22,42 +24,74 @@ const initialState = {
 
 interface User {
   id: string;
-  totalDebits: number;
+  name: string;
+  totalDebits: number | string;
 }
 
-export function ClearDebtForm({ user }: { user: User }) {
+export function ClearDebtForm({
+  user,
+  onSuccess,
+  triggerLabel,
+}: {
+  user: User;
+  onSuccess?: () => void;
+  triggerLabel: string;
+}) {
   const [paymentMethod, setPaymentMethod] = useState<string>("");
-  const [state, formAction, pending] = useActionState(
-    clearAllDebts,
-    initialState,
-  );
+  const [amount, setAmount] = useState<number>("" as unknown as number);
+
+  const action = triggerLabel === "+Add Money" ? addMoney : clearAllDebts;
+
+  const [state, formAction, pending] = useActionState(action, initialState);
   const router = useRouter();
+
   useEffect(() => {
     if (!state.message) return;
 
     if (state.success) {
       toast.success(state.message);
+      onSuccess?.();
       setTimeout(() => {
         router.refresh();
       }, 200);
     } else {
       toast.error(state.message);
     }
-  }, [state]);
+  }, [state, router, onSuccess]);
 
   return (
     <form action={formAction} className="flex flex-col gap-4">
       <input type="hidden" name="userId" value={user.id} />
       <input type="hidden" name="bookingId" value={user.id} />
       <p>
-        A total of{" "}
-        <span className="font-bold text-red-500">₦{user.totalDebits}</span> in
-        outstanding debts.
+        {triggerLabel === "+Add Money" ? (
+          `Add money to  ${user?.name}'s account.`
+        ) : (
+          <div>
+            {"Clear " + user?.name + "'s debt."}
+            <span className="font-bold text-red-600"> ₦{user.totalDebits}</span>
+          </div>
+        )}
       </p>
-      <p>Which must be paid in full.</p>
+
+      <p>
+        {triggerLabel === "+Add Money"
+          ? "How much would you like to add?"
+          : "Which must be paid in full.."}
+      </p>
 
       <Label htmlFor="amount">Amount </Label>
-      <Input name="amount" value={user.totalDebits} readOnly />
+      <Input
+        name="amount"
+        id="amount"
+        type="number"
+        min="1"
+        onChange={(e) => setAmount(Number(e.target.value))}
+        placeholder="0.00"
+        required
+        value={triggerLabel === "+Add Money" ? amount : user.totalDebits}
+        readOnly={triggerLabel !== "+Add Money"}
+      />
 
       <Label htmlFor="paymentMethod">Payment Method</Label>
       <Select
@@ -74,8 +108,19 @@ export function ClearDebtForm({ user }: { user: User }) {
           <SelectItem value="TRANSFER">Transfer</SelectItem>
 
           <SelectItem value="POS">POS</SelectItem>
-          <SelectItem value="CREDIT">Credit</SelectItem>
-          <SelectItem value="CASHBACK">Cashback</SelectItem>
+
+          <SelectItem
+            value="CREDIT"
+            className={triggerLabel === "+addMoney" ? "hidden" : ""}
+          >
+            Credit
+          </SelectItem>
+          <SelectItem
+            value="CASHBACK"
+            className={triggerLabel === "+addMoney" ? "hidden" : ""}
+          >
+            Cashback
+          </SelectItem>
         </SelectContent>
       </Select>
 
@@ -86,9 +131,37 @@ export function ClearDebtForm({ user }: { user: User }) {
         </p>
       )}
 
-      <Button disabled={pending} type={"submit"}>
-        {pending ? "Saving..." : "Clear Debt"}
+      <Button disabled={pending} type="submit">
+        {pending
+          ? "Saving..."
+          : triggerLabel === "+Add Money"
+            ? "Add Money"
+            : "Clear Debt"}
       </Button>
     </form>
+  );
+}
+
+export function ClearDebtDialog({
+  user,
+  triggerLabel,
+}: {
+  user: User;
+  triggerLabel: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const closeOnSuccess = useCallback(() => setOpen(false), []);
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger className="mt-3">{triggerLabel}</DialogTrigger>
+      <DialogContent>
+        <ClearDebtForm
+          user={user}
+          onSuccess={closeOnSuccess}
+          triggerLabel={triggerLabel}
+        />
+      </DialogContent>
+    </Dialog>
   );
 }

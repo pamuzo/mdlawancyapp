@@ -3,6 +3,16 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -25,16 +35,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { allCustomers } from "@/lib/actions/customers.action";
+import { allCustomers, deleteCustomer } from "@/lib/actions/customers.action";
 import { MoreHorizontalIcon, X } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 
 export default function CustomersPage() {
+  const router = useRouter();
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("ALL");
   const [customers, setCustomers] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [customerToDelete, setCustomerToDelete] = useState<any | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     async function fetchCustomers() {
@@ -47,7 +62,7 @@ export default function CustomersPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [search, filter, customers.length]);
+  }, [search, filter]);
 
   const filteredCustomers = useMemo(() => {
     return customers.filter((customer) => {
@@ -120,6 +135,28 @@ export default function CustomersPage() {
     const start = (currentPage - 1) * 15;
     return sortedCustomers.slice(start, start + 15);
   }, [sortedCustomers, currentPage]);
+
+  // delete customer functionality
+  async function handleDeleteCustomer() {
+    if (!customerToDelete) return;
+
+    setIsDeleting(true);
+    try {
+      await deleteCustomer(customerToDelete.id);
+      setCustomers((currentCustomers) =>
+        currentCustomers.filter(
+          (customer) => customer.id !== customerToDelete.id,
+        ),
+      );
+      toast.success(
+        `${customerToDelete.name ?? "Customer"} was deleted successfully`,
+      );
+      setCustomerToDelete(null);
+      router.refresh();
+    } finally {
+      setIsDeleting(false);
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -246,6 +283,12 @@ export default function CustomersPage() {
                             View Details
                           </Link>
                         </DropdownMenuItem>
+                        <DropdownMenuItem
+                          variant="destructive"
+                          onClick={() => setCustomerToDelete(customer)}
+                        >
+                          Delete Customer
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -287,6 +330,35 @@ export default function CustomersPage() {
           </div>
         </CardContent>
       </Card>
+
+      <AlertDialog
+        open={customerToDelete !== null}
+        onOpenChange={(open) => {
+          if (!open && !isDeleting) setCustomerToDelete(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this customer?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete{" "}
+              {customerToDelete?.name ?? "this customer"}
+              {customerToDelete?.email ? ` (${customerToDelete.email})` : ""}.
+              This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              variant="destructive"
+              onClick={handleDeleteCustomer}
+              disabled={isDeleting}
+            >
+              {isDeleting ? "Deleting..." : "Delete customer"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

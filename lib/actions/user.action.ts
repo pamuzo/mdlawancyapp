@@ -219,11 +219,6 @@ export async function updateProfile(formData: FormData) {
     });
 
     redirect("/profile");
-
-    // return {
-    //   success: true,
-    //   message: "Updated Successfully",
-    // };
   } catch (error) {
     console.error(error);
     throw error;
