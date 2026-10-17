@@ -1,6 +1,6 @@
 import { SidebarTrigger } from "@/components/ui/sidebar";
-
-import { Search, Bell } from "lucide-react";
+import NotificationInbox from "@/components/notifications/notification-inbox";
+import { Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -40,17 +40,7 @@ export default async function DashboardTrigger() {
             <Search className="size-4 " />
           </Button>
 
-          {/* Notifications */}
-
-          <Button
-            variant="outline"
-            size="icon"
-            className="relative rounded-xl border hover:bg-green-50"
-          >
-            <Bell className="size-4 text-gray-500" />
-
-            <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-red-500" />
-          </Button>
+          <NotificationInbox subscriberId={session?.user.id} />
         </div>
       </header>
 

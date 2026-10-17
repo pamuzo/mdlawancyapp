@@ -27,7 +27,7 @@ export default async function AdminLayout({
       <AppSidebar session={session} />
 
       <SidebarInset>
-        <DashboardHeader />
+        <DashboardHeader subscriberId={user.id} />
 
         <main className="p-6">{children}</main>
       </SidebarInset>

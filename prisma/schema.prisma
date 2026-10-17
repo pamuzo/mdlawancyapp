@@ -104,6 +104,7 @@ model User {
   sales           Booking[]
   debts           Debts[]
   moneyAddeds     MoneyAdded[]
+  pushTokens      PushToken[]
 }
 
 model Account {
@@ -208,4 +209,16 @@ model MoneyAdded {
   paymentMethod String
   createdAt     DateTime @default(now()) @db.Timestamp(6)
   user          User     @relation(fields: [userId], references: [id])
+}
+
+model PushToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
