@@ -1,3 +1,5 @@
+import "server-only";
+
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { cert, getApps, initializeApp } from "firebase-admin/app";
@@ -59,10 +61,12 @@ function getCredential() {
   });
 }
 
-const app =
-  getApps()[0] ??
-  initializeApp({
-    credential: getCredential(),
-  });
+export function getAdminMessaging() {
+  const app =
+    getApps()[0] ??
+    initializeApp({
+      credential: getCredential(),
+    });
 
-export const messaging = getMessaging(app);
+  return getMessaging(app);
+}

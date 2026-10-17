@@ -1,4 +1,4 @@
-import { messaging } from "@/lib/firebase-admin";
+import { getAdminMessaging } from "@/lib/firebase-admin";
 import { prisma } from "@/db/prisma";
 
 export async function sendPushToUser(
@@ -8,6 +8,7 @@ export async function sendPushToUser(
   const rows = await prisma.pushToken.findMany({ where: { userId } });
   if (!rows.length) return;
 
+  const messaging = getAdminMessaging();
   const res = await messaging.sendEachForMulticast({
     tokens: rows.map((r) => r.token),
     notification: { title: "MD Lawancy", body },
