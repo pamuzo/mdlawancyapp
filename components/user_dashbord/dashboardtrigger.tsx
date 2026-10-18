@@ -1,5 +1,4 @@
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import NotificationInbox from "@/components/notifications/notification-inbox";
 import { Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -9,6 +8,7 @@ import { getSession } from "@/lib/get-session";
 
 export default async function DashboardTrigger() {
   const session = await getSession();
+
   return (
     <>
       {/* Dashboard Header */}
@@ -39,8 +39,6 @@ export default async function DashboardTrigger() {
           >
             <Search className="size-4 " />
           </Button>
-
-          <NotificationInbox subscriberId={session?.user.id} />
         </div>
       </header>
 

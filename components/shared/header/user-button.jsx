@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { redirect } from "next/navigation";
-import { FiBell, FiLogOut, FiSettings, FiUser } from "react-icons/fi";
+import { FiLogOut, FiSettings, FiUser } from "react-icons/fi";
 
 function Usermenu({ session, signOutUser }) {
   const firstInitial = session?.user.name.charAt(0).toUpperCase() ?? "U";
@@ -70,15 +70,6 @@ function Usermenu({ session, signOutUser }) {
                 variant="ghost"
               >
                 <FiSettings /> Settings
-              </Button>
-            </DropdownMenuItem>
-
-            <DropdownMenuItem className={"p-0 mb-1"}>
-              <Button
-                className="w-full py-4 px-2 h-4 justify-start text-muted-foreground "
-                variant="ghost"
-              >
-                <FiBell /> Notifications
               </Button>
             </DropdownMenuItem>
 

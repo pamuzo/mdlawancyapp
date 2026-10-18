@@ -3,7 +3,6 @@ import DashboardHeader from "@/components/dashboard/dashboard-header";
 import {
   SidebarInset,
   SidebarProvider,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { getSession } from "@/lib/get-session";
 import { redirect } from "next/navigation";
@@ -27,7 +26,7 @@ export default async function AdminLayout({
       <AppSidebar session={session} />
 
       <SidebarInset>
-        <DashboardHeader subscriberId={user.id} />
+        <DashboardHeader />
 
         <main className="p-6">{children}</main>
       </SidebarInset>

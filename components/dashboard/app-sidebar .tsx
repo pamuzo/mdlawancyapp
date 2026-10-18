@@ -151,11 +151,13 @@ export function AppSidebar({ session }: { session: any }) {
 
                 return (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton isActive={isActive} tooltip={item.title}>
-                      <Link href={item.url} className="flex items-center gap-2">
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </Link>
+                    <SidebarMenuButton
+                      render={<Link href={item.url} />}
+                      isActive={isActive}
+                      tooltip={item.title}
+                    >
+                      <item.icon />
+                      <span>{item.title}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 );
@@ -175,15 +177,16 @@ export function AppSidebar({ session }: { session: any }) {
                   className="group/collapsible"
                 >
                   <SidebarMenuItem>
-                    <CollapsibleTrigger>
-                      <SidebarMenuButton tooltip={item.title}>
-                        <item.icon />
+                    <SidebarMenuButton
+                      render={<CollapsibleTrigger />}
+                      tooltip={item.title}
+                    >
+                      <item.icon />
 
-                        <span>{item.title}</span>
+                      <span>{item.title}</span>
 
-                        <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                      </SidebarMenuButton>
-                    </CollapsibleTrigger>
+                      <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                    </SidebarMenuButton>
 
                     <CollapsibleContent>
                       <SidebarMenuSub>
@@ -192,13 +195,11 @@ export function AppSidebar({ session }: { session: any }) {
 
                           return (
                             <SidebarMenuSubItem key={subItem.title}>
-                              <SidebarMenuSubButton isActive={isActive}>
-                                <Link
-                                  href={subItem.url}
-                                  className="flex items-center gap-2"
-                                >
-                                  <span>{subItem.title}</span>
-                                </Link>
+                              <SidebarMenuSubButton
+                                render={<Link href={subItem.url} />}
+                                isActive={isActive}
+                              >
+                                <span>{subItem.title}</span>
                               </SidebarMenuSubButton>
                             </SidebarMenuSubItem>
                           );

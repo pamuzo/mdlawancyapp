@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Bell,
   Building2,
   ChevronDown,
   HandCoins,
@@ -91,11 +90,6 @@ const accountNavigation = [
     title: "KYC Verification",
     href: "/kyc",
     icon: ShieldCheck,
-  },
-  {
-    title: "Notifications",
-    href: "/notifications",
-    icon: Bell,
   },
   {
     title: "Messages",

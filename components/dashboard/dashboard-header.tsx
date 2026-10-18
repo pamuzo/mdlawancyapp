@@ -1,14 +1,9 @@
 "use client";
 
-import NotificationInbox from "@/components/notifications/notification-inbox";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { usePathname } from "next/navigation";
 
-export default function DashboardHeader({
-  subscriberId,
-}: {
-  subscriberId: string;
-}) {
+export default function DashboardHeader() {
   const pathname = usePathname();
   return (
     <header className="flex h-16 items-center justify-between border-b px-4">
@@ -16,7 +11,6 @@ export default function DashboardHeader({
         <SidebarTrigger />
         <span className="capitalize font-bold">{pathname.slice(1)}</span>
       </div>
-      <NotificationInbox subscriberId={subscriberId} />
     </header>
   );
 }
