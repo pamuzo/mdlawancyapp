@@ -189,6 +189,11 @@ export default function AddBookingDialog() {
                     <p className="text-sm text-muted-foreground">
                       {customer.businessName}
                     </p>
+                    <p className="text-sm text-muted-foreground">
+                      {customer.totalCredit
+                        ? `Total Credit: ₦${customer.totalCredit.toLocaleString()}`
+                        : "No credit available"}
+                    </p>
                   </div>
                 )}
               </CardContent>
@@ -294,8 +299,6 @@ export default function AddBookingDialog() {
                   required
                 />
               </div>
-
-              
 
               <div className="grid gap-4 md:grid-cols-3">
                 <div>
@@ -416,7 +419,9 @@ export default function AddBookingDialog() {
               </div>
             </form>
             {state && !state.success && state.message && (
-              <div className="text-center text-destructive">{state.message}</div>
+              <div className="text-center text-destructive">
+                {state.message}
+              </div>
             )}
           </CardContent>
         </div>

@@ -18,7 +18,7 @@ export async function getDebtCleared() {
 }
 
 //  to clear single  debt
-export async function createDebt(prevState: any, formData: FormData) {
+export async function clearSingleDebt(prevState: any, formData: FormData) {
   try {
     const userId = formData.get("userId") as string;
     const bookingId = formData.get("bookingId") as string;
@@ -32,15 +32,7 @@ export async function createDebt(prevState: any, formData: FormData) {
       };
     }
 
-    await prisma.debts.create({
-      data: {
-        userId,
-        bookingId,
-        amount,
-        paymentMethod,
-      },
-    });
-
+    // Check if the booking exists and get its balance
     const booking = await prisma.booking.findUnique({
       where: { id: bookingId },
       select: {
@@ -56,7 +48,18 @@ export async function createDebt(prevState: any, formData: FormData) {
       };
     }
 
+    // Check if the payment amount exceeds the outstanding booking balance
     const balance = Number(booking.balance);
+
+    // let overpaid   = amount - balance;
+    let newBalance = amount;
+
+    if (paymentMethod === "CREDIT") {
+      if (amount > balance) {
+        newBalance = balance;
+      }
+    }
+
     if (amount > balance) {
       return {
         success: false,
@@ -65,20 +68,42 @@ export async function createDebt(prevState: any, formData: FormData) {
       };
     }
 
+    // Create a new debt entry
+    await prisma.debts.create({
+      data: {
+        userId,
+        bookingId,
+        amount,
+        paymentMethod,
+      },
+    });
+
+    // Update the booking's balance and the user's totalDebits
     await prisma.booking.update({
       where: { id: bookingId },
       data: {
         balance: {
-          decrement: amount,
+          decrement: newBalance,
         },
       },
     });
 
+    // Update the user's totalDebits
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        totalCredit: {
+          decrement: newBalance,
+        },
+      },
+    });
+
+    // Update the user's totalDebits
     await prisma.user.update({
       where: { id: userId },
       data: {
         totalDebits: {
-          decrement: amount,
+          decrement: newBalance,
         },
       },
     });
@@ -110,6 +135,8 @@ export async function clearAllDebts(prevState: any, formData: FormData) {
         message: "Missing required fields",
       };
     }
+
+    // Create a new debt entry
     await prisma.debts.create({
       data: {
         userId,
@@ -119,6 +146,7 @@ export async function clearAllDebts(prevState: any, formData: FormData) {
       },
     });
 
+    // Update all bookings for the user to set balance to 0
     await prisma.booking.updateMany({
       where: { userId },
       data: {
@@ -126,6 +154,7 @@ export async function clearAllDebts(prevState: any, formData: FormData) {
       },
     });
 
+    // Update the user's totalDebits to 0
     await prisma.user.update({
       where: { id: userId },
       data: {
@@ -178,7 +207,12 @@ export async function addMoney(_prevState: unknown, formData: FormData) {
 
     return { success: true, message: "Money added successfully" };
   } catch (error: unknown) {
-    console.error("Failed to add money", { userId, amount, paymentMethod, error });
+    console.error("Failed to add money", {
+      userId,
+      amount,
+      paymentMethod,
+      error,
+    });
 
     if (
       typeof error === "object" &&
@@ -200,7 +234,8 @@ export async function addMoney(_prevState: unknown, formData: FormData) {
 
     return {
       success: false,
-      message: "Could not add money. Please try again or check the server logs.",
+      message:
+        "Could not add money. Please try again or check the server logs.",
     };
   }
 }

@@ -65,7 +65,7 @@ import { formatDate } from "@/lib/utils";
 import BookingSheet from "./bookingSheet";
 import StatCard from "../stateCard";
 import { motion } from "framer-motion";
-import { createDebt } from "@/lib/actions/debt.actions";
+import { clearSingleDebt, createDebt } from "@/lib/actions/debt.actions";
 
 type customerBookings = {
   id: string;
@@ -85,6 +85,7 @@ type customerBookings = {
     name: string;
     email: string;
     phoneNumber: string | null;
+    totalCredit: string;
   };
 };
 
@@ -119,7 +120,7 @@ export default function UserBooking({
     null,
   );
 
-  const [state, formAction, pending] = useActionState(createDebt, {
+  const [state, formAction, pending] = useActionState(clearSingleDebt, {
     success: false,
     message: "",
     timestamp: 0,
@@ -277,8 +278,7 @@ export default function UserBooking({
   }, [search, filter]);
 
   const textColor = ["text-red-600", "text-yellow-600", "text-green-600"];
-  const isInvalidAmount =
-    amount <= 0 || amount > (selectedBooking?.balance ?? 0);
+  const isInvalidAmount = amount === 0;
   const isInvalidPaymentMethod = paymentMethod === "";
 
   const totalDebits = filteredBookings.reduce(
@@ -641,8 +641,51 @@ export default function UserBooking({
                 This action will clear the selected customer's debt.
               </SheetDescription>
             </SheetHeader>
-            <div className="grid flex-1 auto-rows-min gap-6 px-4">
+            <div className="grid flex-1 auto-rows-min  px-4">
+              <p className="text-sm text-green-500">
+                TOTAL CREDIT: ₦
+                {Number(selectedBooking?.user.totalCredit).toLocaleString() ||
+                  "0"}
+              </p>
               <form action={formAction} className="space-y-6 pt-5">
+                <Label>Payment Method</Label>
+
+                <Select
+                  value={paymentMethod}
+                  onValueChange={(value) => {
+                    setPaymentMethod(value ?? "");
+                    if (value === "CREDIT") {
+                      setAmount(
+                        Number(selectedBooking?.user?.totalCredit) ?? 0,
+                      );
+                    }
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select payment method" />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    <SelectItem value="CASH">Cash</SelectItem>
+
+                    <SelectItem value="TRANSFER">Transfer</SelectItem>
+
+                    <SelectItem value="POS">POS</SelectItem>
+                    <SelectItem value="CREDIT">Credit</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <input
+                  type="hidden"
+                  name="paymentMethod"
+                  value={paymentMethod}
+                />
+                {isInvalidPaymentMethod && (
+                  <p className="text-sm text-red-500">
+                    Payment Method is required.
+                  </p>
+                )}
+
                 <Label>Payment Amount (₦)</Label>
                 <Input
                   id="amount"
@@ -650,9 +693,10 @@ export default function UserBooking({
                   type="number"
                   value={amount}
                   onChange={(e) => setAmount(Number(e.target.value))}
-                  max={selectedBooking?.balance}
+                  // max={selectedBooking?.balance}
                   min={1}
                   required
+                  // disabled={paymentMethod === "CREDIT"}
                 />
                 {/* error if amount is greater than balance */}
                 {isInvalidAmount && (
@@ -668,49 +712,16 @@ export default function UserBooking({
                   value={selectedBooking?.id ?? ""}
                 />
                 <input type="hidden" name="userId" value={customer?.id ?? ""} />
-                <div>
-                  <Label>Balance (₦)</Label>
-                  <Input
-                    id="balance"
-                    name="balance"
-                    type="number"
-                    value={selectedBooking?.balance ?? 0}
-                    disabled
-                  />
-                </div>
-                <div>
-                  <Label>Payment Method</Label>
 
-                  <Select
-                    value={paymentMethod}
-                    onValueChange={(val) => setPaymentMethod(val ?? "")}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select payment method" />
-                    </SelectTrigger>
+                <Label>Balance (₦)</Label>
+                <Input
+                  id="balance"
+                  name="balance"
+                  type="number"
+                  value={selectedBooking?.balance ?? 0}
+                  disabled
+                />
 
-                    <SelectContent>
-                      <SelectItem value="CASH">Cash</SelectItem>
-
-                      <SelectItem value="TRANSFER">Transfer</SelectItem>
-
-                      <SelectItem value="POS">POS</SelectItem>
-                      <SelectItem value="CREDIT">Credit</SelectItem>
-                      <SelectItem value="CASHBACK">Cashback</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  <input
-                    type="hidden"
-                    name="paymentMethod"
-                    value={paymentMethod}
-                  />
-                  {isInvalidPaymentMethod && (
-                    <p className="text-sm text-red-500">
-                      Payment Method is required.
-                    </p>
-                  )}
-                </div>
                 <SheetFooter>
                   <Button type="submit" disabled={pending || isInvalidAmount}>
                     {pending ? "Saving..." : "Save changes"}

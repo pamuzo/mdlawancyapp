@@ -41,9 +41,8 @@ export async function ProfileStats({ user }: Props) {
   );
 
   const reputation =
-    (Number(user?.totalSpent) / totalSpentOfAllUser) *
-    0.8 *
-    // (Number(user?.totalJobs) / totalQuantityOfAllUser) * 0.2)
+    ((Number(user?.totalSpent) / totalSpentOfAllUser) * 0.9 +
+      (Number(user?.totalJobs) / totalQuantityOfAllUser) * 0.1) *
     100;
 
   return (
@@ -105,7 +104,7 @@ export async function ProfileStats({ user }: Props) {
         <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-slate-900">
           <p className="text-sm text-slate-500">Reputation</p>
           <h3 className="mt-2 text-3xl font-bold text-orange-500">
-            {isNaN(reputation) ? "0" : reputation.toFixed(1)}%
+            {isNaN(reputation) ? "0" : reputation.toFixed(2)}%
           </h3>
         </div>
       )}
