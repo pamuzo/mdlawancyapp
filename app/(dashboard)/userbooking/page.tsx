@@ -13,6 +13,10 @@ export default async function UserBookingPage() {
     .filter((booking) => booking.userId === user?.id)
     .map((booking) => ({
       ...booking,
+      user: {
+        ...booking.user,
+        totalCredit: String(booking.user.totalCredit),
+      },
       cost: Number(booking.cost),
       deposit: Number(booking.deposit),
       balance: Number(booking.balance),
