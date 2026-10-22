@@ -65,7 +65,7 @@ import { formatDate } from "@/lib/utils";
 import BookingSheet from "./bookingSheet";
 import StatCard from "../stateCard";
 import { motion } from "framer-motion";
-import { clearSingleDebt, createDebt } from "@/lib/actions/debt.actions";
+import { clearSingleDebt } from "@/lib/actions/debt.actions";
 
 type customerBookings = {
   id: string;

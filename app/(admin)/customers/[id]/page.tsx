@@ -25,6 +25,16 @@ export default async function CustomerPage({
       totalPrice: Number(booking.totalPrice),
       createdAt: booking.createdAt.toString(),
       deliveryDate: booking.deliveryDate?.toString(),
+      user: {
+        ...booking.user,
+        cashBack: booking.user.cashBack.toString(),
+        totalCredit: booking.user.totalCredit.toString(),
+        totalDebits: booking.user.totalDebits.toString(),
+        totalSpent: booking.user.totalSpent.toString(),
+        previousDebits: booking.user.previousDebits.toString(),
+        totalJobs: booking.user.totalJobs.toString(),
+        phoneNumber: booking.user.phoneNumber ?? "",
+      },
     }));
   // .slice(0, 20);
 
