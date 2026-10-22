@@ -116,9 +116,9 @@ export default function UserBooking({
   );
   const [selectedBooking, setSelectedBooking] =
     useState<customerBookings | null>(null);
-  const [detailBooking, setDetailBooking] = useState<customerBookings | null>(
-    null,
-  );
+  const [detailBooking, setDetailBooking] = useState<
+    Parameters<typeof BookingSheet>[0]["selectedBooking"]
+  >(null);
 
   const [state, formAction, pending] = useActionState(clearSingleDebt, {
     success: false,
@@ -737,7 +737,7 @@ export default function UserBooking({
       </Card>
       {/* this is a placeholder for the booking sheet */}
       <BookingSheet
-        setSelectedBooking={setDetailBooking}
+        setSelectedBooking={(booking) => setDetailBooking(booking)}
         selectedBooking={detailBooking}
       />
       {/* this is a placeholder for the list of debts cleared */}
