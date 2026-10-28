@@ -32,6 +32,30 @@ export const insertProductSchema = z.object({
   price: currency,
 });
 
+// Cart schema for validating cart items
+export const cartItemSchema = z.object({
+  productId: z.string().min(1, "Product ID is required"),
+  name: z.string().min(1, "Product name is required"),
+  price: currency,
+  images: z.string().min(1, "At least one image URL is required"),
+  slug: z.string().min(1, "Product slug is required"),
+  quantity: z
+    .number()
+    .int()
+    .nonnegative("Quantity must be a non-negative integer"),
+});
+
+export const insertCartSchema = z.object({
+  items: z.array(cartItemSchema).min(1, "Cart must have at least one item"),
+  totalPrice: currency,
+  itemPrice: currency,
+  shippingPrice: currency,
+  taxPrice: currency,
+  grandTotal: currency,
+  sessionCartId: z.string().min(1, "Session cart ID is required"),
+  userId: z.string().optional().nullable(),
+});
+
 // To validate password strength
 export const passwordSchema = z
   .string()

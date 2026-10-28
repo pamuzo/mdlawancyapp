@@ -26,7 +26,7 @@ const ProductDetailsPage = async (props: {
 
   return (
     <>
-      <section>
+      <section className="container mx-auto mt-10">
         <div className="grid grid-col-1 md:grid-cols-5">
           {/* Image colum */}
           <div className="md:col-span-2">
@@ -67,8 +67,8 @@ const ProductDetailsPage = async (props: {
               </div>
 
               <div className="flex flex-col sm:flex-row sm:items-center gap-3 ">
-                <p className="w-24 rounded-full bg-green-100 text-green-700 px-5 py-2 text-center font-medium">
-                  ${product.price}
+                <p className="w-24 rounded-full bg-green-100 text-green-700 py-2 text-center font-medium">
+                  ₦{product.price}
                 </p>
               </div>
             </div>
@@ -88,7 +88,7 @@ const ProductDetailsPage = async (props: {
               <CardContent className="p-4">
                 <div className="mb-2 flex justify-between">
                   <div>Price:</div>
-                  <p className="font-semibold">${product.price}</p>
+                  <p className="font-semibold">₦{product.price}</p>
                 </div>
 
                 <div className="mb-2 flex justify-between">

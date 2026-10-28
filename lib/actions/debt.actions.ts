@@ -58,9 +58,7 @@ export async function clearSingleDebt(prevState: any, formData: FormData) {
       if (amount > balance) {
         newBalance = balance;
       }
-    }
-
-    if (amount > balance) {
+    } else if (amount > balance) {
       return {
         success: false,
         message: "Payment amount cannot exceed the outstanding balance.",
