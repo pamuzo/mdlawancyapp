@@ -11,7 +11,9 @@ export default async function UserBookingPage() {
 
   const bookings = await getBooking();
   const funding = await getFundingRecords();
+
   const customerFunding = funding.filter((fund) => fund.userId === user?.id);
+  console.log("customer funding", customerFunding);
 
   const normalizedBookings = bookings
     .filter((booking) => booking.userId === user?.id)
