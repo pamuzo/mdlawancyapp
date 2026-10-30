@@ -2,9 +2,9 @@
 
 export default function OfflinePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center px-6 text-center">
+    <main className="flex min-h-svh flex-col items-center justify-center px-4 text-center sm:px-6">
       <div className="max-w-md">
-        <div className="mb-6 text-6xl">📡</div>
+        <div className="mb-6 text-5xl sm:text-6xl">📡</div>
 
         <h1 className="text-3xl font-bold">You're offline</h1>
 

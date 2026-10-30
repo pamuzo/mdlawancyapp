@@ -53,7 +53,7 @@ export default function CreatePurchaseDialog() {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+      <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>Create Purchase</DialogTitle>
 

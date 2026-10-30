@@ -10,10 +10,10 @@ export default async function RootLayout({
 }>) {
   const session = await getSession();
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex min-h-svh flex-col">
       <Header session={session} />
 
-      <main className="flex-1 ">{children}</main>
+      <main className="min-w-0 flex-1">{children}</main>
       <WhatsAppButton />
       <Footer />
     </div>

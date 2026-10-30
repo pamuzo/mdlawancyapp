@@ -18,16 +18,16 @@ const ProductImages = ({ images }: ProductImagesProps) => {
         alt="product Image "
         width={1000}
         height={500}
-        className="min-h-96 object-cover object-center"
+        className="min-h-64 max-h-[32rem] w-full rounded-lg object-cover object-center"
       />
-      <div className="flex">
+      <div className="flex flex-wrap gap-2">
         {images.map((image, index) => (
           <div
             key={index}
             onClick={() => setCurrentImage(index)}
             className={`border ${
               currentImage === index ? "border-[#00425a]" : "border-gray-300"
-            } p-1 hover:border-[#00425a] rounded-md mr-2 cursor-pointer`}
+            } h-16 w-16 shrink-0 cursor-pointer rounded-md p-1 hover:border-[#00425a]`}
           >
             <Image
               src={image}

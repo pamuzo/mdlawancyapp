@@ -433,7 +433,7 @@ export default function PurchasesClientPage({ purchases }: Props) {
                           <PaymentBadge method={purchase.paymentMethod} />
                         </div>
 
-                        <div className="mt-4 grid grid-cols-3 gap-3">
+                        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
                           <div>
                             <p className="text-[11px] text-muted-foreground">
                               Total

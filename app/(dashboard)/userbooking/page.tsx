@@ -1,5 +1,6 @@
 import UserBooking from "@/components/bookings/userBooking";
 import { getBooking } from "@/lib/actions/booking.action";
+import { getFundingRecords } from "@/lib/actions/debt.actions";
 import { getSession } from "@/lib/get-session";
 import { redirect } from "next/navigation";
 
@@ -9,6 +10,9 @@ export default async function UserBookingPage() {
   if (!user) redirect("/sign-in");
 
   const bookings = await getBooking();
+  const funding = await getFundingRecords();
+  const customerFunding = funding.filter((fund) => fund.userId === user?.id);
+
   const normalizedBookings = bookings
     .filter((booking) => booking.userId === user?.id)
     .map((booking) => ({
@@ -36,6 +40,7 @@ export default async function UserBookingPage() {
       customer={user}
       customerBookings={normalizedBookings}
       customerDebts={[]}
+      customerFunding={customerFunding}
     />
   );
 }

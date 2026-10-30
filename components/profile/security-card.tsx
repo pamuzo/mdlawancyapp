@@ -23,12 +23,12 @@ type Props = {
 
 export function SecurityCard({ user }: Props) {
   return (
-    <div className="rounded-3xl bg-white p-6 shadow-sm dark:bg-slate-900">
+    <div className="rounded-3xl bg-white p-4 shadow-sm sm:p-6 dark:bg-slate-900">
       <h2 className="mb-6 text-xl font-semibold">Security</h2>
 
       <div className="space-y-5">
-        <div className="flex items-center justify-between rounded-xl border p-4">
-          <div>
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border p-3 sm:p-4">
+          <div className="min-w-0 flex-1">
             <h3 className="font-medium">Email Verification</h3>
 
             <p className="text-sm text-slate-500">Verify your email address</p>
@@ -49,8 +49,8 @@ export function SecurityCard({ user }: Props) {
           </span>
         </div>
 
-        <div className="flex items-center justify-between rounded-xl border p-4">
-          <div>
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border p-3 sm:p-4">
+          <div className="min-w-0 flex-1">
             <h3 className="font-medium">Password</h3>
 
             <p className="text-sm text-slate-500">Update your password</p>
@@ -61,8 +61,8 @@ export function SecurityCard({ user }: Props) {
           </Button>
         </div>
 
-        <div className="flex items-center justify-between rounded-xl border p-4">
-          <div>
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border p-3 sm:p-4">
+          <div className="min-w-0 flex-1">
             <h3 className="font-medium">Two-Factor Authentication</h3>
 
             <p className="text-sm text-slate-500">

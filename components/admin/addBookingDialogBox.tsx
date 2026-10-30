@@ -45,7 +45,7 @@ function SubmitButton({ customer }: { customer: Customer | null }) {
   const { pending } = useFormStatus();
 
   return (
-    <Button type="submit" disabled={!customer}>
+    <Button type="submit" disabled={!customer} className="w-full sm:w-auto">
       {pending ? (
         <>
           <Spinner data-icon="inline-start" />
@@ -143,8 +143,8 @@ export default function AddBookingDialog() {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="flex max-h-[90vh] flex-col overflow-hidden p-0 sm:max-w-[600px]">
-        <DialogHeader className="shrink-0 border-b px-6 py-4">
+      <DialogContent className="flex max-h-[90dvh] flex-col overflow-hidden p-0 sm:max-w-[600px]">
+        <DialogHeader className="shrink-0 border-b px-4 py-4 sm:px-6">
           <DialogTitle>Create Booking</DialogTitle>
 
           <DialogDescription>
@@ -189,7 +189,8 @@ export default function AddBookingDialog() {
                     <p className="text-sm text-muted-foreground">
                       {customer.businessName}
                     </p>
-                    <p className="text-sm text-muted-foreground">
+                    {/* { customer.totalCredit < 0 ? } */}
+                    <p className="text-sm text-green-600">
                       {customer.totalCredit
                         ? `Total Credit: ₦${customer.totalCredit.toLocaleString()}`
                         : "No credit available"}
@@ -403,10 +404,11 @@ export default function AddBookingDialog() {
                 </CardContent>
               </Card>
 
-              <div className="flex justify-end gap-3">
+              <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
                 <Button
                   variant="outline"
                   type="button"
+                  className="w-full sm:w-auto"
                   onClick={() => {
                     resetForm();
                     setOpen(false);

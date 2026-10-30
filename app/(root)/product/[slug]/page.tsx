@@ -26,15 +26,15 @@ const ProductDetailsPage = async (props: {
 
   return (
     <>
-      <section className="container mx-auto mt-10">
-        <div className="grid grid-col-1 md:grid-cols-5">
+      <section className="container mx-auto mt-6 px-4 sm:mt-10 sm:px-6">
+        <div className="grid min-w-0 grid-cols-1 gap-6 md:grid-cols-5">
           {/* Image colum */}
-          <div className="md:col-span-2">
+          <div className="min-w-0 md:col-span-2">
             <ProductImages images={product.images.map((img) => img.url)} />
           </div>
 
           {/* Product details column */}
-          <div className="col-span-2 p-5">
+          <div className="min-w-0 p-4 sm:p-5 md:col-span-2">
             <div className="flex flex-col gap-6">
               <p>
                 {product.brand} {product.category}
@@ -83,7 +83,7 @@ const ProductDetailsPage = async (props: {
           </div>
 
           {/* Action Column  */}
-          <div>
+          <div className="min-w-0">
             <Card>
               <CardContent className="p-4">
                 <div className="mb-2 flex justify-between">
@@ -120,7 +120,7 @@ const ProductDetailsPage = async (props: {
 
           {/* Features */}
           {product.features?.length > 0 && (
-            <div className="space-y-3">
+            <div className="min-w-0 space-y-3 md:col-span-2">
               <h2 className="text-lg font-semibold">Key Features</h2>
 
               <ul className="space-y-2">
@@ -130,7 +130,7 @@ const ProductDetailsPage = async (props: {
                     className="flex items-start gap-2 text-sm text-muted-foreground"
                   >
                     <CheckCircle2 className="mt-0.5 h-4 w-4 text-green-600" />
-                    {feature.feature}
+                    <span className="min-w-0 break-words">{feature.feature}</span>
                   </li>
                 ))}
               </ul>
@@ -139,18 +139,18 @@ const ProductDetailsPage = async (props: {
 
           {/* Specifications */}
           {specifications.length > 0 && (
-            <div className="space-y-4">
+            <div className="min-w-0 space-y-4 md:col-span-2">
               <h2 className="text-lg font-semibold">Specifications</h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 border rounded-lg overflow-hidden">
                 {specifications.map((spec) => (
                   <div
                     key={spec.label}
-                    className="flex justify-between border-b px-4 py-3 text-sm"
+                    className="flex min-w-0 justify-between gap-3 border-b px-4 py-3 text-sm"
                   >
                     <span className="font-medium">{spec.label}</span>
 
-                    <span className="text-muted-foreground">{spec.value}</span>
+                    <span className="min-w-0 break-words text-right text-muted-foreground">{spec.value}</span>
                   </div>
                 ))}
               </div>
@@ -159,7 +159,7 @@ const ProductDetailsPage = async (props: {
 
           {/* Tags */}
           {product.tags?.length > 0 && (
-            <div className="space-y-3">
+            <div className="min-w-0 space-y-3 md:col-span-2">
               <h2 className="text-lg font-semibold">Tags</h2>
 
               <div className="flex flex-wrap gap-2">

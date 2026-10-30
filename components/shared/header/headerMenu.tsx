@@ -50,8 +50,8 @@ function HeaderMenu({
         <h3 className="  p-2 ">free shipping in Auchi on orders over 3000k</h3>
       </div> */}
 
-        <div className="max-w-7xl mx-auto pt-3  sm:px-6 lg:px-8 flex items-center ">
-          <div className="flex shrink-0 px-2 lg:w-[15%] ">
+        <div className="mx-auto flex max-w-7xl items-center px-2 pt-3 sm:px-6 lg:px-8">
+          <div className="flex shrink-0 px-1 sm:px-2 lg:w-[15%]">
             <Link href="/">
               <Image
                 src="/images/logo.svg"
@@ -59,14 +59,15 @@ function HeaderMenu({
                 width={70}
                 height={70}
                 priority
+                className="h-12 w-12 sm:h-[70px] sm:w-[70px]"
               />
             </Link>
           </div>
 
           {/* Search input*/}
-          <div className="flex grow flex-col gap-4 pt-2 sm:px-0 items-end ">
-            <div className="flex w-full  justify-between pl-6 ">
-              <div className=" relative w-full ">
+          <div className="flex min-w-0 grow flex-col items-end gap-4 pt-2 sm:px-0">
+            <div className="flex w-full justify-between pl-1 sm:pl-6">
+              <div className="relative w-full">
                 <ButtonGroup className="hidden md:flex absolute top-0 left-0 w-full max-w-xl">
                   <Input
                     id="input-button-group"
@@ -77,7 +78,7 @@ function HeaderMenu({
               </div>
 
               {/* Social Icons */}
-              <div className="flex items-center justify-end w-full md:w-auto  pr-5 gap-3 ">
+              <div className="flex w-full items-center justify-end gap-1 pr-1 sm:gap-3 sm:pr-5 md:w-auto">
                 <ModeToggle />
                 <Link href="#" className="hidden sm:flex  text-xl">
                   Shop
@@ -88,10 +89,10 @@ function HeaderMenu({
                   <Link href="/sign-in">
                     <Button
                       variant={"ghost"}
-                      className="flex  items-center text-2xl   hover:text-[#00425A] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00425A] font-semibol2"
+                      className="flex items-center px-2 text-sm font-semibold hover:text-[#00425A] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00425A] sm:px-4 sm:text-base"
                     >
-                      <UserIcon style={{ width: 24, height: 24 }} />
-                      Sign In
+                      <UserIcon className="size-5 sm:size-6" />
+                      <span className="hidden sm:inline">Sign In</span>
                     </Button>
                   </Link>
                 ) : (
@@ -126,17 +127,17 @@ function HeaderMenu({
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="flex items-center md:hidden ml-2">
+          <div className="ml-1 flex items-center md:hidden sm:ml-2">
             <button
               onClick={() => setOpen((v) => !v)}
               aria-expanded={open}
               aria-controls="mobile-menu"
-              className="p-2 rounded-md  hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="rounded-md p-1.5 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:p-2"
             >
               <span className="sr-only">Toggle menu</span>
               {open ? (
                 <svg
-                  className="h-8 w-8"
+                  className="h-7 w-7 sm:h-8 sm:w-8"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -151,7 +152,7 @@ function HeaderMenu({
                 </svg>
               ) : (
                 <svg
-                  className="h-8 w-8"
+                  className="h-7 w-7 sm:h-8 sm:w-8"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -191,7 +192,7 @@ function HeaderMenu({
               ))}
               <a
                 href={user ? "/profile" : "/sign-in"}
-                className="block px-3 py-2 mt-2  rounded-md "
+                className="mt-2 block break-all rounded-md px-3 py-2"
                 onClick={() => setOpen(false)}
               >
                 {user ? `Profile (${user.email})` : "Sign in"}

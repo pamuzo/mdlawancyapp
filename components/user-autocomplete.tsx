@@ -73,13 +73,18 @@ export function UserAutocomplete({ value, onSelect }: UserAutocompleteProps) {
           role="combobox"
           className="w-full justify-between"
         >
-          {selectedUser?.name ?? "Search Customer"}
+          <span className="min-w-0 truncate text-left">
+            {selectedUser?.name ?? "Search Customer"}
+          </span>
 
-          <ChevronsUpDown className="h-4 w-4 opacity-50" />
+          <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="w-[400px] p-0" align="start">
+      <PopoverContent
+        className="w-[min(400px,calc(100vw-2rem))] p-0"
+        align="start"
+      >
         <Command shouldFilter={false}>
           <CommandInput
             placeholder="Search by Name, Phone Number, Email, Business Name..."
@@ -102,14 +107,14 @@ export function UserAutocomplete({ value, onSelect }: UserAutocompleteProps) {
                     setOpen(false);
                   }}
                 >
-                  <div className="flex flex-col">
-                    <span>{user.name}</span>
+                  <div className="flex min-w-0 flex-col">
+                    <span className="break-words">{user.name}</span>
 
-                    <span className="text-xs text-muted-foreground">
+                    <span className="break-words text-xs text-muted-foreground">
                       {user.email}
                     </span>
-                    <span className="text-xs text-muted-foreground">
-                      {`${user.phoneNumber} - ${user.businessName}`}
+                    <span className="break-words text-xs text-muted-foreground">
+                      {`${user.phoneNumber} - ${user.businessName}  `}
                     </span>
                   </div>
 

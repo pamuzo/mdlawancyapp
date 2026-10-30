@@ -161,11 +161,24 @@ export default function CustomersPage() {
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader className="flex  justify-between">
+        <CardHeader className="flex flex-col items-start gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <CardTitle>Search for Customer</CardTitle>
           <h2> Total Customers: {customers.length}</h2>
           <h2>
             Total Debtors: {customers.filter((c) => c.totalDebits > 0).length}
+          </h2>
+          <h2>
+            Total Debts:{" "}
+            <span className="text-red-600">
+              ₦
+              {customers
+                .reduce(
+                  (total, customer) =>
+                    total + (Number(customer.totalDebits) || 0),
+                  0,
+                )
+                .toLocaleString()}
+            </span>
           </h2>
         </CardHeader>
         <CardContent className="flex flex-col gap-4 pt-6 md:flex-row">

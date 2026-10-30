@@ -19,9 +19,9 @@ export default async function EditProfile({
   if (user?.id !== id) redirect("/forbidden");
 
   return (
-    <div className="flex flex-col gap-8 max-w-7xl mx-auto pt-3  sm:px-6 lg:px-8">
+    <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 pt-3 sm:px-6 lg:px-8">
       <Card>
-        <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6">
+        <CardContent className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 sm:p-6 md:grid-cols-4">
           <div>
             <p className="text-muted-foreground">Cash Back</p>
             <p className="font-bold text-red-500">₦{user.cashBack}</p>

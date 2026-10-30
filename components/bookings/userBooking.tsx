@@ -66,6 +66,7 @@ import BookingSheet from "./bookingSheet";
 import StatCard from "../stateCard";
 import { motion } from "framer-motion";
 import { clearSingleDebt } from "@/lib/actions/debt.actions";
+import Funding from "./funding";
 
 type customerBookings = {
   id: string;
@@ -100,10 +101,12 @@ export default function UserBooking({
   customerBookings,
   customer,
   customerDebts,
+  customerFunding,
 }: {
   customerBookings: customerBookings[];
   customer: customer;
   customerDebts: any[];
+  customerFunding: any[];
 }) {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("ALL");
@@ -116,9 +119,8 @@ export default function UserBooking({
   );
   const [selectedBooking, setSelectedBooking] =
     useState<customerBookings | null>(null);
-  const [detailBooking, setDetailBooking] = useState<
-    Parameters<typeof BookingSheet>[0]["selectedBooking"]
-  >(null);
+  const [detailBooking, setDetailBooking] =
+    useState<Parameters<typeof BookingSheet>[0]["selectedBooking"]>(null);
 
   const [state, formAction, pending] = useActionState(clearSingleDebt, {
     success: false,
@@ -742,6 +744,7 @@ export default function UserBooking({
       />
       {/* this is a placeholder for the list of debts cleared */}
       <Debt debts={customerDebts} />
+      <Funding fund={customerFunding} />
     </div>
   );
 }

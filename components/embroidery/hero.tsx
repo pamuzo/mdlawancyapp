@@ -14,7 +14,7 @@ export default function Hero() {
   const opacity = useTransform(scrollY, [0, 400], [1, 0]);
 
   return (
-    <section className="relative  flex min-h-screen items-center overflow-hidden bg-slate-950">
+    <section className="relative flex min-h-svh items-center overflow-hidden bg-slate-950">
       {/* Background Image */}
       <motion.div style={{ y: imageY }} className="absolute inset-0">
         <Image
@@ -71,7 +71,7 @@ export default function Hero() {
           y: contentY,
           opacity,
         }}
-        className="relative z-20 mx-auto w-full max-w-7xl px-6"
+        className="relative z-20 mx-auto w-full max-w-7xl px-4 sm:px-6"
       >
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -99,7 +99,7 @@ export default function Hero() {
             transition={{
               delay: 0.3,
             }}
-            className="text-5xl font-black leading-tight tracking-tight text-white md:text-7xl"
+            className="text-3xl font-black leading-tight tracking-tight text-white sm:text-5xl md:text-7xl"
           >
             Precision Stitching
             {/* Stitching Excellence */}
@@ -114,7 +114,7 @@ export default function Hero() {
             transition={{
               delay: 0.5,
             }}
-            className="mt-8 max-w-2xl text-lg leading-8 text-slate-300 md:text-xl"
+            className="mt-6 max-w-2xl text-base leading-7 text-slate-300 sm:mt-8 sm:text-lg sm:leading-8 md:text-xl"
           >
             We create premium embroidered apparel for businesses, schools,
             sports teams, restaurants, hospitality, and organizations using
@@ -152,21 +152,21 @@ export default function Hero() {
             transition={{
               delay: 1,
             }}
-            className="mt-16 grid grid-cols-3 gap-8"
+            className="mt-10 grid grid-cols-3 gap-3 sm:mt-16 sm:gap-8"
           >
             <div>
-              <h3 className="text-4xl font-bold text-white">10K+</h3>
-              <p className="text-slate-400">Garments</p>
+              <h3 className="text-2xl font-bold text-white sm:text-4xl">10K+</h3>
+              <p className="text-xs text-slate-400 sm:text-base">Garments</p>
             </div>
 
             <div>
-              <h3 className="text-4xl font-bold text-white">5+</h3>
-              <p className="text-slate-400">Years</p>
+              <h3 className="text-2xl font-bold text-white sm:text-4xl">5+</h3>
+              <p className="text-xs text-slate-400 sm:text-base">Years</p>
             </div>
 
             <div>
-              <h3 className="text-4xl font-bold text-white">100+</h3>
-              <p className="text-slate-400">Clients</p>
+              <h3 className="text-2xl font-bold text-white sm:text-4xl">100+</h3>
+              <p className="text-xs text-slate-400 sm:text-base">Clients</p>
             </div>
           </motion.div>
         </motion.div>

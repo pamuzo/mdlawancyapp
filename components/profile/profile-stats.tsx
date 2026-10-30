@@ -47,10 +47,10 @@ export async function ProfileStats({ user }: Props) {
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      <div className="rounded-2xl  bg-white p-6 shadow-sm dark:bg-slate-900">
+      <div className="min-w-0 rounded-2xl bg-white p-4 shadow-sm sm:p-6 dark:bg-slate-900">
         <p className="text-sm text-slate-500">CashBack</p>
-        <div className="flex justify-between align-baseline">
-          <h3 className="mt-2 text-3xl font-bold text-green-500">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h3 className="mt-2 min-w-0 break-words text-2xl font-bold text-green-500 sm:text-3xl">
             ₦{Number(user.cashBack)?.toLocaleString()}
           </h3>
           <Button
@@ -63,10 +63,10 @@ export async function ProfileStats({ user }: Props) {
         </div>
       </div>
 
-      <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-slate-900">
+      <div className="min-w-0 rounded-2xl bg-white p-4 shadow-sm sm:p-6 dark:bg-slate-900">
         <p className="text-sm text-slate-500">Total in Debit</p>
-        <div className="flex justify-between align-baseline">
-          <h3 className="mt-2 text-3xl font-bold text-red-500">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h3 className="mt-2 min-w-0 break-words text-2xl font-bold text-red-500 sm:text-3xl">
             ₦{Number(user.totalDebits).toLocaleString()}
           </h3>
           {adminUser?.role === "admin" && (
@@ -74,10 +74,10 @@ export async function ProfileStats({ user }: Props) {
           )}
         </div>
       </div>
-      <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-slate-900">
+      <div className="min-w-0 rounded-2xl bg-white p-4 shadow-sm sm:p-6 dark:bg-slate-900">
         <p className="text-sm text-slate-500">Available funds</p>
-        <div className="flex justify-between align-baseline">
-          <h3 className="mt-2 text-3xl font-bold text-green-500">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h3 className="mt-2 min-w-0 break-words text-2xl font-bold text-green-500 sm:text-3xl">
             ₦{user.totalCredit.toLocaleString()}
           </h3>
           {adminUser?.role === "admin" && (
@@ -93,17 +93,17 @@ export async function ProfileStats({ user }: Props) {
         </div>
       </div>
       {user?.previousDebits > "1" ? (
-        <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-slate-900">
+        <div className="min-w-0 rounded-2xl bg-white p-4 shadow-sm sm:p-6 dark:bg-slate-900">
           <p className="text-sm text-slate-500">Previous Debits</p>
-          <h3 className="mt-2 text-3xl font-bold text-red-500">
+          <h3 className="mt-2 break-words text-2xl font-bold text-red-500 sm:text-3xl">
             ₦{Number(user.previousDebits).toLocaleString()}
           </h3>
           <p className="text-xs text-slate-500">Before registration</p>
         </div>
       ) : (
-        <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-slate-900">
+        <div className="min-w-0 rounded-2xl bg-white p-4 shadow-sm sm:p-6 dark:bg-slate-900">
           <p className="text-sm text-slate-500">Reputation</p>
-          <h3 className="mt-2 text-3xl font-bold text-orange-500">
+          <h3 className="mt-2 break-words text-2xl font-bold text-orange-500 sm:text-3xl">
             {isNaN(reputation) ? "0" : reputation.toFixed(2)}%
           </h3>
         </div>

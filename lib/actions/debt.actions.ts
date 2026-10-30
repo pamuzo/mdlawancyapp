@@ -17,6 +17,19 @@ export async function getDebtCleared() {
   return covertToPlainObject(data);
 }
 
+// get all funding records
+export async function getFundingRecords() {
+  const data = await prisma.moneyAdded.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      user: true,
+    },
+  });
+  return covertToPlainObject(data);
+}
+
 //  to clear single  debt
 export async function clearSingleDebt(prevState: any, formData: FormData) {
   try {
